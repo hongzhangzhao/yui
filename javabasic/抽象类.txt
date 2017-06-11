@@ -1,0 +1,4 @@
+# 不可以new对象
+
+
+# 当一个类中出现abstract方法时，这个类的声明必须加上abstract关键字，否则Java将报错。一个abstract类不能用于创建对象。
