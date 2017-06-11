@@ -1,1 +1,1 @@
-# private的方法默认为final方法
+# private鐨勬柟娉曢粯璁や负final鏂规硶
