@@ -1,0 +1,10 @@
+# 所有的类都是继承Object类，调用对象的时候，对象会自动调用Object类的toString方法，
+  在新类不重写toString方法的情况下，会返回对象的在内存中的地址值。
+
+# public String toString() {
+     
+      return getClass().getName() + "@" + Integer.toHexString(hashCode());
+}
+
+
+# 

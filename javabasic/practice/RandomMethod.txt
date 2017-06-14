@@ -1,0 +1,18 @@
+import java.util.*;
+
+
+public class Demo1 {
+
+	static Random ran = new Random();
+
+	static int ranR(int a) {
+
+		return Math.abs(ran.nextInt()) % a + 1;
+	}
+
+	public static void main(String[] args)  {
+
+		
+
+	}
+}
