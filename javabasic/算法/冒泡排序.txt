@@ -1,0 +1,53 @@
+
+1: 相邻的两个元素进行比较，如果符合条件就调换位置。
+
+2：每比完一圈最值都不用在进行比较，比较的元素数量在自减
+
+    3  1  5  4  6  2
+
+    1  3  4  5  2  ，6
+
+    1  3  4  2  ，5  6
+
+    1  3  2  ，4  5  6
+
+    1  2  ，3  4  5  6
+
+3：
+   public class Test1 {
+
+	public static void bubbleSort(int[] arr) {
+
+		for (int x = 0; x < arr.length - x - 1; x++) { // -x:让每一次比较的元素减少，-1:避免角标越界.
+
+			for (int y = 0; y < arr.length - x - 1; y++) {
+
+				if (arr[y] > arr[y + 1]) {
+					int temp = arr[y];
+					arr[y] = arr[y + 1];
+					arr[y + 1] = temp;
+				}
+			}
+		}
+
+	}
+
+	public static void main(String[] args) {
+
+		int[] arr = { 3, 2, 1, 6, 5, 4 };
+		Test1.bubbleSort(arr);
+		printArray(arr);
+	}
+
+	public static void printArray(int[] arr) {
+
+		System.out.print("[");
+		for (int x = 0; x < arr.length; x++) {
+			if (x != arr.length - 1) {
+				System.out.print(arr[x] + ",");
+			} else {
+				System.out.println(arr[x] + "]");
+			}
+		}
+	}
+}
