@@ -18,9 +18,9 @@
 
 	public static void bubbleSort(int[] arr) {
 
-		for (int x = 0; x < arr.length - 1; x++) { // -x:让每一次比较的元素减少，-1:避免角标越界.
+		for (int x = 0; x < arr.length - 1; x++) {    // -1：相邻两个元素比较 ，最后一个元素没有相邻的了
 
-			for (int y = 0; y < arr.length - x - 1; y++) {
+			for (int y = 0; y < arr.length - x - 1; y++) {   // -x:让每一次比较的元素减少，-1:避免角标越界.
 
 				if (arr[y] > arr[y + 1]) {
 					int temp = arr[y];
