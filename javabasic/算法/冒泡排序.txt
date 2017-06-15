@@ -18,7 +18,7 @@
 
 	public static void bubbleSort(int[] arr) {
 
-		for (int x = 0; x < arr.length - x - 1; x++) { // -x:让每一次比较的元素减少，-1:避免角标越界.
+		for (int x = 0; x < arr.length - 1; x++) { // -x:让每一次比较的元素减少，-1:避免角标越界.
 
 			for (int y = 0; y < arr.length - x - 1; y++) {
 
@@ -51,3 +51,7 @@
 		}
 	}
 }
+
+
+
+# Arrays.sort(arr);  可以自动排序
