@@ -6,8 +6,8 @@
 	好处：可以简化对字符串的复杂操作。
 	
 	具体操作功能：
-		1，匹配：String类中的matches方法
-
+		1，匹配：String类中的matches方法；
+				 用规则匹配整个字符串，只要有一处不符合规则，就匹配结束，返回false.
 */
 
 class Test {
@@ -35,7 +35,15 @@ class Test {
         }
     }
 
-
+	
+	public static void demo(){
+		
+		String sx = "";
+		String sy = "";
+		boolean xxx = sx.matches(sy);
+		System.out.println();
+	}
+	
     public static void main(String[] args) {
 
         checkQQ();
