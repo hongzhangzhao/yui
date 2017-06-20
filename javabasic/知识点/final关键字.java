@@ -3,8 +3,12 @@
 	但是对象中的数据可以修改。
 */
 
-final class Test { //final类不可以被继承
-
+final class Test { 
+	/*
+		final类不可以被继承，
+		所有的方法都默认为final,因为无法覆盖它们
+	*/
+	
 
 }
 
@@ -32,7 +36,8 @@ public class A extends TestOne {
 		
 	} 
 	/*
-		由于
+		由于TestOne中的private方法不能被继承，
+		所以A类中的function和function_1是重新定义的，不是覆盖。
 	*/
 	public void function_1(){
 		
