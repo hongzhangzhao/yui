@@ -46,7 +46,7 @@ public class A extends TestOne {
 	
     void method() { //这个方法是父类的final方法，重写不了
 
-        System.out.print("final的方法不能被子类重写");
+        System.out.print("final的方法能被继承，但不能被子类重写");
     }
 
     final int a = 1 ;
