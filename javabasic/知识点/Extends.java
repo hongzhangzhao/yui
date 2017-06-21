@@ -1,7 +1,7 @@
 /*
 	隐藏是针对成员变量和static方法的
 	覆盖针对一般方法-动态绑定
-	
+	private;static;final 使用静态
 */
 
 
