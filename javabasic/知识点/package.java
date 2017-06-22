@@ -1,4 +1,4 @@
-package com.hongz.test; //package必须定义在代码的最上面
+﻿package com.hongz.test; //package必须定义在代码的最上面
 
 import com.hongz.test.Class; //导入某某包中的类，以便在当前类中调用import类中的方法
 

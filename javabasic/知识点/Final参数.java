@@ -1,3 +1,9 @@
+/*
+	final类型的必须有值才能使用
+	对象类型的参数可以赋值null，只要与之类型匹配的值就好；
+
+*/
+
 class Gizmo {
 	public void spin() {
 		System.out.println("Gizmo.spin");
