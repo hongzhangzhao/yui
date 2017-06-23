@@ -1,0 +1,24 @@
+命令行操作：
+	1,git init
+	2,git remote
+	3,get branch -a
+	4,git remote add origin 项目地址
+	5,git fetch
+	6,输出账号
+	7,git rebase
+	8,git branch --set-upsream-to==origin/master master
+	9,git push
+	10,账号
+	11,git rebase
+	12,git push
+
+往本地提交：	
+1,git commit
+2,添加注释
+
+远程提交：
+1,git fetch
+2,git rebase   和其他人代码合并
+3,git push	   把代码提交到中心库上
+
+	
