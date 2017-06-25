@@ -1,4 +1,4 @@
-命令行操作：
+﻿命令行操作：
 	1,git init
 	2,git remote
 	3,get branch -a
@@ -20,5 +20,26 @@
 1,git fetch
 2,git rebase   和其他人代码合并
 3,git push	   把代码提交到中心库上
+
+
+___________________
+
+git status
+git fetch
+git rebase
+git fetch
+git rebase
+
+git status
+git commit -a -m "   "
+git fetch
+git rebase
+git push
+
+git commit -a -m "  "
+git push
+
+
+
 
 	
