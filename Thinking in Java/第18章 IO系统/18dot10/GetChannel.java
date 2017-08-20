@@ -17,7 +17,7 @@ public class GetChannel{
         //allocate无数据可定义容量的字节数组包装进缓冲器
         ByteBuffer buff = ByteBuffer.allocate(BSIZE);
         fc.read(buff);
-        buff.filp(); //游标归零，limit数据大小
+        buff.filp(); 
         while(buff.hasRemaining()){
             System.out.print((char)buff.get());
 
