@@ -1,3 +1,0 @@
-Manifest-Version: 1.0
-Name: com/nastation/c13/BangBean.class
-Java-Bean: True
