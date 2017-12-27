@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+	<constant name="struts.i18n.encoding" value="GBK"/>
+
+    <package name="lee" extends="struts-default">
+
+		<interceptors>
+            <interceptor name="authority" class="org.yeeku.action.interceptor.AuthorityInterceptor"/>
+            <interceptor-stack name="auctionStack">
+                <interceptor-ref name="defaultStack"/>
+                <interceptor-ref name="authority"/>
+            </interceptor-stack>
+		</interceptors>
+
+		<default-interceptor-ref name="auctionStack"/>
+
+		<global-results>
+			<!-- 下面定义的结果对所有的Action都有效 -->
+			<result name="login">/WEB-INF/jsp/login.jsp</result>
+			<result name="exception">/WEB-INF/jsp/error.jsp</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<!-- 指Action抛出AuctionException异常时，转入名为exception的结果。 -->
+			<exception-mapping exception="org.yeeku.exception.AuctionException" result="exception"/>
+			<!-- 指Action抛出Exception异常时，转入名为exception的结果。 -->
+			<exception-mapping exception="java.lang.Exception" result="exception"/>
+		</global-exception-mappings>
+
+
+		<action name="index">
+            <result name="success">/WEB-INF/jsp/main.jsp</result>
+        </action>
+
+		<action name="viewItemSu" class="org.yeeku.action.ViewSuAction">
+            <result name="success">/WEB-INF/jsp/viewSuccess.jsp</result>    
+        </action>
+
+        <action name="viewFailItem" class="org.yeeku.action.ViewFailAction">
+            <result name="success">/WEB-INF/jsp/viewFail.jsp</result>    
+        </action>
+
+        <action name="viewBid" class="org.yeeku.action.ViewBidAction">
+            <result name="success">/WEB-INF/jsp/viewBid.jsp</result>    
+        </action>
+
+        <action name="mgrItem" class="org.yeeku.action.MgrItemAction">
+            <result name="success">/WEB-INF/jsp/mgrItem.jsp</result>
+        </action>
+
+        <action name="mgrKind" class="org.yeeku.action.MgrKindAction">
+            <result name="success">/WEB-INF/jsp/mgrKind.jsp</result>    
+        </action>
+
+        <action name="viewKind" class="org.yeeku.action.ViewKindAction">
+            <result name="success">/WEB-INF/jsp/viewKind.jsp</result>    
+        </action>
+
+        <action name="viewItem" class="org.yeeku.action.ViewItemAction">
+            <result name="input">viewKind.action</result>    
+            <result name="success">/WEB-INF/jsp/viewItem.jsp</result>  
+         </action>
+        <action name="viewDetail" class="org.yeeku.action.ViewDetailAction">
+            <result name="error">/WEB-INF/jsp/error.jsp</result>
+            <result name="success">/WEB-INF/jsp/viewDetail.jsp</result>
+        </action>
+
+        <action name="processLogin" class="org.yeeku.action.LoginAction">
+            <result name="input">/WEB-INF/jsp/login.jsp</result>    
+            <result name="success">/WEB-INF/jsp/main.jsp</result>
+            <result name="failure">/WEB-INF/jsp/login.jsp</result>
+			<interceptor-ref name="defaultStack"/>
+        </action>
+
+        <action name="proAddItem" class="org.yeeku.action.AddItemAction">
+            <result name="input" type="chain">mgrItem</result>    
+            <result name="success" type="chain">mgrItem</result>
+        </action>
+        <action name="proAddKind" class="org.yeeku.action.AddKindAction">
+            <result name="input" type="chain">mgrKind</result>    
+            <result name="success" type="chain">mgrKind</result>
+        </action>
+        <action name="bid" class="org.yeeku.action.AddBidAction">
+            <result name="input" type="chain">viewDetail</result>    
+            <result name="success" type="chain">viewBid</result>
+        </action>
+
+    </package> 
+
+</struts>

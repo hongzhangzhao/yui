@@ -1,0 +1,13 @@
+部署Web应用请按如下步骤进行:
+    1. 进入reg_login路径下，将mysql.sql脚本中的语句导入MySQL数据库。
+
+    2. 修改reg_login\WEB-INF路径下的applicationContext.xml文件，将其中的数据库密码修改为你的数据库密码。
+ 
+    3. 推荐使用Tomcat 5.5系列作为应用服务器。将整个应用复制到%TOMCAT_HOME%/webapps路径下。
+
+    4. 启动Dos或shell窗口，进入reg_login\WEB-INF路径下，输入：
+       ant compile -- 该命令用于编译应用。
+
+    5. 启动Tomcat服务器。
+
+    6. 系统的Login.jsp页面是登录页面，Regist.jsp页面是注册页面。

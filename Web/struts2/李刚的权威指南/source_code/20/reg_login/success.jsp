@@ -1,0 +1,18 @@
+<%@ page contentType="text/html; charset=GBK"%>
+<%@taglib prefix="s" uri="/struts-tags"%>
+<html>
+<head>
+   <title>×¢²á/µÇÂ½³É¹¦</title>
+</style>
+</head>
+<body>
+<center>
+×¢²á/µÇÂ½³É¹¦<br>
+<table width="500" height="200">
+<tr><td>
+<a href="Regist.jsp">ÖØÐÂ×¢²á</a>&nbsp;&nbsp;<a href="Login.jsp">µÇÂ½</a>
+<td></tr>
+</table>
+</center>
+</body>
+</html>

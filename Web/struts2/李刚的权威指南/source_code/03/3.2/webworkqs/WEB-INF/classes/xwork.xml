@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE xwork PUBLIC 
+	"-//OpenSymphony Group//XWork 1.1//EN" 
+	"http://www.opensymphony.com/xwork/xwork-1.1.dtd">
+ 
+<xwork> 
+    <!-- 导入WebWork默认配置文件-->
+    <include file="webwork-default.xml" />
+    <package name="default" extends="webwork-default">    
+     
+	    <action name="login" class="lee.LoginAction">
+            <result name="input">/login.jsp</result>
+		    <result name="error">/error.jsp</result>
+		    <result name="success">/success.jsp</result>
+	    </action> 
+ 
+    </package> 
+</xwork>

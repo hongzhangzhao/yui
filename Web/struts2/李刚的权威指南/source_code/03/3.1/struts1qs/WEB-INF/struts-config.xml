@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+	
+<struts-config>
+
+	<form-beans>
+		<form-bean name="loginForm" type="lee.LoginForm"/>
+	</form-beans>
+
+	<action-mappings>
+
+		<action path="/login" type="lee.LoginAction" name="loginForm" 
+			validate="true" scope="request" input="/login.jsp">
+			<forward name="welcome" path="/welcome.jsp" />
+			<forward name="error" path="/error.jsp"/>
+		</action>
+
+	</action-mappings>
+
+	<message-resources parameter="MyResource"/>
+
+	<plug-in className="org.apache.struts.validator.ValidatorPlugIn">
+		<set-property property="pathnames" value="/WEB-INF/validator-rules.xml,/WEB-INF/validation.xml" />
+		<set-property property="stopOnFirstError" value="true"/>
+	</plug-in>
+</struts-config>

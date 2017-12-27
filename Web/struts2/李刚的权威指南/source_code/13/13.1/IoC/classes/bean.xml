@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="GBK"?>
+<!-- 定义Spring配置文件的根元素，并指定Schema信息 -->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="chinese" class="lee.Chinese"/>
+	<bean id="american" class="lee.American"/>
+
+</beans>

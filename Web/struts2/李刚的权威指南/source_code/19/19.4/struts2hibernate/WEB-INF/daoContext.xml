@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="GBK"?>
+<daoContext>
+	<dao id="sonDao" class="org.yeeku.dao.impl.SonDaoImpl"/>
+	<dao id="personDao" class="org.yeeku.dao.impl.PersonDaoImpl"/>
+</daoContext>

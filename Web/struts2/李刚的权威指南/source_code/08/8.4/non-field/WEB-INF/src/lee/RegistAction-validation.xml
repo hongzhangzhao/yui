@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE validators PUBLIC "-//OpenSymphony Group//XWork Validator 1.0.2//EN"
+	"http://www.opensymphony.com/xwork/xwork-validator-1.0.2.dtd">
+
+<validators>
+
+	<validator type="requiredstring">
+		<param name="fieldName">name</param>
+		<param name="trim">true</param>
+		<message>${getText("name.requried")}</message>
+	</validator>
+	<validator type="regex">
+		<param name="fieldName">name</param>
+		<param name="trim">true</param>
+		<param name="expression"><![CDATA[(\w{4,25})]]></param>
+		<message>${getText("name.regex")}</message>
+	</validator>
+	<validator type="requiredstring">
+		<param name="fieldName">pass</param>
+		<param name="trim">true</param>
+		<message>${getText("pass.requried")}</message>
+	</validator>
+	<validator type="regex">
+		<param name="fieldName">pass</param>
+		<param name="trim">true</param>
+		<param name="expression"><![CDATA[(\w{4,25})]]></param>
+		<message>${getText("pass.regex")}</message>
+	</validator>
+	<validator type="int">
+		<param name="fieldName">age</param>
+		<param name="min">1</param>
+		<param name="max">150</param>
+		<message>${getText("age.range")}</message>
+	</validator>
+	<validator type="date">
+		<param name="fieldName">birth</param>
+		<param name="min">1900-01-01</param>
+		<param name="max">2050-02-21</param>
+		<message>${getText("birth.range")}</message>
+	</validator>
+
+</validators>

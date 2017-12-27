@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+	<constant name="struts.i18n.encoding" value="GBK"/>
+ 
+	<package name="lee" extends="jasperreports-default">  
+		<action name="export" class="lee.JasperAction">
+			<result name="success" type="jasper">
+				<param name="location">jasper\sample_report.jasper</param>
+				<param name="format">HTML</param>
+				<param name="dataSource">bookList</param>
+			</result>
+		</action>
+	</package>
+
+</struts>

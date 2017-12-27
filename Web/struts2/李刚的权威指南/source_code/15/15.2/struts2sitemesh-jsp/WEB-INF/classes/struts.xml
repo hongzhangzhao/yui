@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+	<constant name="struts.i18n.encoding" value="GBK"/>
+
+	<package name="jsf" extends="jsf-default">
+		<interceptors>
+			<interceptor-stack name="jsfFullStack">
+				<interceptor-ref name="params" />
+				<interceptor-ref name="basicStack"/>
+				<interceptor-ref name="jsfStack"/>
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="jsfFullStack"/>
+	</package>
+  
+	<package name="lee" extends="jsf">  
+		<action name="list" class="lee.action.BookAction">
+			<result name="success" type="jsf"/>
+		</action>
+		<action name="edit" class="lee.action.BookAction">
+			<result name="success" type="jsf"/>
+			<result name="list" type="redirect">list.action</result>
+		</action>
+	</package>
+
+</struts>

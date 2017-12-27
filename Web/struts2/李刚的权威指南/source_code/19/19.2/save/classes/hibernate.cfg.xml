@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='GBK'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<!--上面四行对所有的hibernate连接配置文件都相同 -->
+<!-- hibernate- configuration是连接配置文件的根元素 -->
+<hibernate-configuration>
+<session-factory>
+    <!-- 指定连接数据库所用的驱动 -->
+        <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+        <!-- 指定连接数据库的url，hibernate连接的数据库名 -->
+        <property name="connection.url">jdbc:mysql://localhost/hibernate</property>
+        <!-- 指定连接数据库的用户名 -->
+        <property name="connection.username">root</property>
+        <!-- 指定连接数据库的密码 -->
+        <property name="connection.password">32147</property>
+        <!-- 指定连接池的大小-->
+        <!-- C3P0 connection pool  -->
+        <property name="hibernate.c3p0.max_size">20</property>
+        <property name="hibernate.c3p0.min_size">1</property>
+        <property name="hibernate.c3p0.timeout">5000</property>
+        <property name="hibernate.c3p0.max_statements">100</property>
+        <property name="hibernate.c3p0.idle_test_period">3000</property>
+        <property name="hibernate.c3p0.acquire_increment">2</property>
+        <property name="hibernate.c3p0.validate">true</property>
+        <!-- 指定数据库方言-->
+        <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+        <!-- 根据需要自动创建数据库-->
+        <property name="hbm2ddl.auto">create</property>
+        <!-- 罗列所有的映射文静-->
+        <mapping resource="News.hbm.xml"/>
+    </session-factory>
+</hibernate-configuration>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="GBK"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="daoTemplate" abstract="true">
+		<property name="sessionFactory" ref="sessionFactory"/>
+	</bean>
+
+	<bean id="stateDao" class="org.yeeku.dao.impl.StateDaoHibernate"
+		parent="daoTemplate"/>
+
+	<bean id="kindDao" class="org.yeeku.dao.impl.KindDaoHibernate" 
+		parent="daoTemplate"/>
+
+	<bean id="auctionUserDao" class="org.yeeku.dao.impl.AuctionUserDaoHibernate"
+		parent="daoTemplate"/>
+
+	<bean id="bidDao" class="org.yeeku.dao.impl.BidDaoHibernate"
+		parent="daoTemplate"/>
+
+	<bean id="itemDao" class="org.yeeku.dao.impl.ItemDaoHibernate"
+		parent="daoTemplate"/>
+</beans>

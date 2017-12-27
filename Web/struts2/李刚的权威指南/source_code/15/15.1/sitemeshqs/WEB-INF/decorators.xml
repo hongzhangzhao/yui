@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="GBK"?>
+<!-- defaultdir指定装饰器文件所在的路径 -->
+<decorators defaultdir="/decorators">
+	<!-- 指定main装饰器，该装饰器使用main.jsp页面 -->
+    <decorator name="main" page="main.jsp">
+		<!-- 使用main装饰器装饰所有的JSP页面 -->
+        <pattern>*</pattern>
+    </decorator>
+</decorators>
+ 

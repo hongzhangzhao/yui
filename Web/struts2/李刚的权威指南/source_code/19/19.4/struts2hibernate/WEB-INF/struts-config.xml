@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE struts-config PUBLIC
+          "-//Apache Software Foundation//DTD Struts Configuration 1.2//EN"
+          "http://struts.apache.org/dtds/struts-config_1_2.dtd">
+<struts-config>
+  <form-beans>
+    <form-bean name="addForm" type="org.apache.struts.action.DynaActionForm">
+      <form-property name="name" type="java.lang.String" />
+      <form-property name="gender" type="java.lang.String" />
+      <form-property name="sonName" type="java.lang.String" />
+      <form-property name="sonAge" type="java.lang.String" />
+    </form-bean>
+  </form-beans>
+  <action-mappings >
+    <action path="/add" type="org.yeeku.action.AddPersonAndSon" name="addForm"
+		scope="request" validate="false">
+      <forward name="success" path="/welcome.html" />
+    </action>
+
+  </action-mappings>
+</struts-config>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping package="org.yeeku.model">
+	<!-- 每个class元素映射一个持久化类 -->
+	<class name="Son" table="son">
+		<id name="id">
+			<generator class="identity"/>
+		</id>
+		<property name="sonName"/>
+		<property name="sonAge"/>
+		<many-to-one name="parent" column="person_id" not-null="true"/>
+	</class>
+</hibernate-mapping>

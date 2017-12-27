@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="gb2312"?>
+<!DOCTYPE faces-config PUBLIC
+  "-//Sun Microsystems, Inc.//DTD JavaServer Faces Config 1.1//EN"
+  "http://java.sun.com/dtd/web-facesconfig_1_1.dtd">
+
+<faces-config>
+
+    <navigation-rule>
+        <!--如果执行inputname.jsp的结果是greeting,则从视图页
+        inputname.jsp到视图页greeting.jsp
+        -->
+        <from-view-id>/login.jsp</from-view-id>
+        <navigation-case>
+            <from-outcome>success</from-outcome>
+            <to-view-id>/greeting.jsp</to-view-id>
+        </navigation-case>
+        <navigation-case>
+            <from-outcome>failure</from-outcome>
+            <to-view-id>/login.jsp</to-view-id>
+        </navigation-case>
+    </navigation-rule>
+
+</faces-config>

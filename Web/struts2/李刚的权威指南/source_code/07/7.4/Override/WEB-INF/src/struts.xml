@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+	<constant name="struts.custom.i18n.resources" value="globalMessages"/>
+	<constant name="struts.i18n.encoding" value="GBK"/>
+
+    <package name="lee" extends="struts-default">
+		<interceptors>
+			<interceptor name="mysimple" class="lee.SimpleInterceptor">
+				<param name="name">简单拦截器</param>
+			</interceptor>
+			<interceptor name="second" class="lee.SecondInterceptor"/>
+
+
+			<interceptor-stack name="my-stack">
+				<interceptor-ref name="mysimple">
+					<param name="name">第一个</param>
+				</interceptor-ref>
+				<interceptor-ref name="second">
+					<param name="name">第二个</param>
+				</interceptor-ref>
+			</interceptor-stack>
+	
+		</interceptors>
+
+        <action name="login" class="lee.LoginAction">
+            <result name="error">/error.jsp</result>
+            <result name="success">/welcome.jsp</result> 
+
+			<!-- 拦截器一般配置在result元素之后! -->
+			<interceptor-ref name="defaultStack"/>
+			<interceptor-ref name="my-stack">
+					<param name="second.name">改名后的拦截器</param>
+			</interceptor-ref>
+
+        </action>
+    </package>
+</struts>

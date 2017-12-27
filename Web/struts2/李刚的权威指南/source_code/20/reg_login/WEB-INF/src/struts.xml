@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="GBK"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+        "http://struts.apache.org/dtds/struts-2.0.dtd">
+<struts>
+
+	<constant name="struts.i18n.encoding" value="GBK"/>
+
+    <package name="lee" extends="json-default">
+
+		<global-results>
+			<!-- 下面定义的结果对所有的Action都有效 -->
+			<result name="exception">/error.jsp</result>
+			<result name="success">/success.jsp</result>
+		</global-results>
+
+		<global-exception-mappings>
+			<!-- 指Action抛出Exception异常时，转入名为exception的结果。 -->
+			<exception-mapping exception="java.lang.Exception" result="exception"/>
+		</global-exception-mappings>
+
+		<action name="*" class="org.yeeku.action.{0}Action">
+			<result name="input">/{0}.jsp</result>	
+			<result name="failure">/{0}.jsp</result>
+        </action>
+
+		<action name="validateName" class="org.yeeku.action.ValidateNameAction">
+			<result type="json"/>
+		</action>
+
+    </package> 
+
+</struts>

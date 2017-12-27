@@ -1,0 +1,27 @@
+书中的代码按章存放，如第1章所使用的代码放在codes文件夹的01文件夹下，依此类推。
+
+代码的运行的前提条件：
+    1.安装j2eesdk-1_4_02_2005Q2-windows-ml.exe，安装完成后，添加CLASSPATH环境变量，该环境变量的值为.;%JAVA_HOME%/lib/tools.jar;;%JAVA_HOME%/lib/dt.jar;%J2EE_HOME%/lib/j2ee.jar。如果为了可以编译和运行Java程序，还应该在PATH环境变量中增加%JAVA_HOME%/bin。其中JAVA_HOME代表JDK（不是JRE,不是J2EE）的安装路径；J2EE_HOME指J2EE SDK安装路径——在系统中增加JAVA_HOME和J2EE_HOME两个环境变量。
+ 
+    2.保证在d:盘根路径下安装Apache的Tomcat 5.5.20，不要使用安装文件安装，而是采用解压缩的安装方式。即：Tomcat的安装路径为d:\tomcat5520，文件夹的路径、名字都不要改变。
+
+    3.安装Ant1.7.0。将下载的Ant压缩文件解压缩到任意路径，然后增加ANT_HOME的环境变量，让变量的值为Ant的解压缩路径。并在PATH环境变量中增加%ANT_HOME%/bin环境变量。
+
+    4.安装MySQL 5.0或更高版本，安装MysSQL时选择GBK的编码方式。
+
+    5.安装Eclipse 3.2，并安装MyEclipse 5.0插件。
+
+代码的运行，分成如下4种情形：
+    1. 独立应用程序的代码中都包括build.xml文件，在Dos或Shell下进入build.xml文件所在路径，执行如下命令：
+       ant build -- 编译程序
+       ant run --运行程序
+
+    2. 对于Web应用，将该应用复制到%TOMCAT_HOME%/webapps路径下，然后进入build.xml所在路径，执行如下命令：
+       ant build -- 编译应用
+    启动Tomcat服务器，使用浏览器即可访问该应用。
+
+    3. 对于Eclipse项目文件，导入Eclipse开发工具即可。
+
+    4. 对于后面的2个案例，请参看每个案例下的readme.txt。
+
+    注意：代码中有大量代码需要连接数据库，读者应修改数据库URL以及用户名、密码，让这些代码与读者运行环境一致。如果项目下有SQL脚本，导入SQL脚本即可；如果没有SQL脚本，系统将在运行时自动建表，读者只需创建对应数据库即可。

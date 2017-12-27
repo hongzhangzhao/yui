@@ -1,0 +1,24 @@
+ <project name="jasper" default="javac" basedir=".">
+
+	<path id="classpath">
+		<pathelement location="classes"/>
+		<fileset dir="../lib">
+			<include name="**/*.jar"/>
+		</fileset>
+	</path>
+
+	<target name="compile" >
+		<delete dir="classes"/>
+		<mkdir dir="classes"/>
+		<javac srcdir="src" destdir="classes" debug="true" optimize="false" deprecation="false">
+			<classpath refid="classpath"/>
+		</javac>
+	</target>
+
+	<target name="run" depends="compile">
+		<java classname="lee.MyJRView" fork="true">
+			<classpath refid="classpath"/>
+		</java>
+	</target>
+
+</project>

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.i18n.encoding" value="GBK"/>
+	<constant name="struts.custom.i18n.resources" value="messageResource"/>
+
+	<package name="lee" extends="struts-default">   
+
+		<action name="add" class="org.yeeku.action.AddPersonAndSon">
+			<result>welcome.html</result>
+		</action>
+    </package>
+
+</struts>	
+	

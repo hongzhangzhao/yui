@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+	
+<struts>
+
+	<constant name="struts.custom.i18n.resources" value="globalMessages"/>
+	<constant name="struts.i18n.encoding" value="GBK"/>
+
+	<package name="lee" extends="struts-default">
+	
+		<action name="upload" class="lee.UploadAction">
+            <param name="savePath">/upload</param>
+			<result>/succ.jsp</result>	
+		</action>		
+	</package>
+</struts>	

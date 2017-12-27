@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+	"-//Hibernate/Hibernate Mapping DTD//EN"
+	"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd" >
+
+<hibernate-mapping package="org.yeeku.model">
+	<class name="User"	table="user_table">
+
+		<id	name="id" column="user_id">
+			<generator class="identity"/>
+		</id>
+
+		<property name="user" column="user_name" not-null="true" length="50" unique="true"/>
+		<property name="pass" column="user_pass" not-null="true" length="50"/>
+		<property name="email" length="100"/>
+
+	</class>	
+</hibernate-mapping>

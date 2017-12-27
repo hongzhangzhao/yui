@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<!DOCTYPE struts PUBLIC
+    "-//Apache Software Foundation//DTD Struts Configuration 2.0//EN"
+    "http://struts.apache.org/dtds/struts-2.0.dtd">
+
+<struts>
+
+	<constant name="struts.custom.i18n.resources" value="globalMessages"/>
+	<constant name="struts.i18n.encoding" value="GBK"/>
+	<package name="lee" extends="struts-default">
+
+        <default-action-ref name="download"/>
+
+        <action name="download" class="lee.FileDownloadAction">
+            <param name="inputPath">\images\中.gif</param>
+			<result name="success" type="stream">
+                <param name="contentType">image/gif</param>
+                <param name="inputName">targetFile</param>
+                <param name="contentDisposition">filename="struts.gif"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+        </action>
+
+        <action name="download2" class="lee.AuthorityDownAction">
+            <param name="inputPath">\images\struts-gif.zip</param>
+            <result name="success" type="stream">
+                <param name="contentType">application/zip</param>
+                <param name="inputName">targetFile</param>
+                <param name="contentDisposition">filename="struts-gif.zip"</param>
+                <param name="bufferSize">4096</param>
+            </result>
+            <result name="login">/input.jsp</result>
+
+        </action>
+
+        <action name="login" class="lee.LoginAction">
+            <result>/stuts2Down.html</result>
+		</action>
+
+    </package>
+</struts>
