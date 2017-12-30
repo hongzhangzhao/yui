@@ -1,0 +1,293 @@
+----------配置文件----------
+
+# 包含配置:
+    ? 一个配置文件可以分解成多个配置文件,由一个配置文件(struts.xml)来包含这多个文件
+    * 包含的配置文件中的信息是完整的
+    * classes下的struts.xml配置文件默认被加载,加载的同时连带包含的配置文件一起加载
+    * use:
+        <include file="XXX.xml"> 
+
+# 拦截器:
+    ? 允许在Action处理之前,和处理结束之后,插入开发者自定义的代码(AOP)
+    * 解决: 多个Action进行相同操作
+    * 作用:
+        * 进行权限控制
+        * 跟踪日志
+        * 跟踪系统的性能瓶颈
+    * 多个拦截器可以组合成一个拦截器(拦截器栈)
+    * use:
+        定义:
+            <interceptors>
+                <interceptor name="" class="" />
+                ......
+                <interceptor-stack name="">
+                    <interceptor-ref name="" />
+                    ......
+                </interceptor-stack>
+            </interceptors>
+        
+        作用在Action:
+            <action>
+                <interceptor-ref name="" />
+            </action>
+            
+# Action:
+    ? 核心控制器! 包含用户请求的处理逻辑(业务控制器)
+    * 低侵入式设计: Action类不必继承和实现相关的类和接口(POJO),提高复用性
+    * 封装HTTP请求参数:
+        * 需要对应属性(可无)
+        * 访问方法(必须)
+    * 属性:
+        * 封装请求参数
+        * 封装处理结果
+        * 输出: <s:property value="属性名">
+    * 封装复杂属性:
+        * 自定义类
+        * 数组
+        * 集合
+        * Map
+    * 规范:
+        * Action接口
+            * 实现类: ActionSuport(默认Action处理类),简化Action开发 
+                * 默认方法:
+                    * 获取国际化信息
+                    * 数据校验
+                    * 处理用户请求
+                    
+# 访问Servlet API
+    * ActionContext类访问:
+        * Object get(Object key): HttpServletRequest.getAttribute();
+        * Map getApplication() : 模拟ServletContext
+        * static ActionContext getContext(): 
+        * Map getParameters()
+        * Map getSession()
+        * void setApplication(Map)
+        * void setSession(Map)
+    * 输出属性值:
+        * ${applicationScope.Key}
+        * ${sessionScope.Key}
+        * ${requsetScope.Key}
+    * Action与Servlet API分离,Action可以脱离Web容器运行
+    
+    * 直接访问:
+        * 实现接口:
+            * ServletContextAware
+            * ServletRequestAware
+            * ServletResponseAware
+        * user:
+            * 实现接口,实现对应的setServlet...(HttpServlet... ...)方法
+            * 需要对应参数的成员属性,在处理逻辑方法中(execute)使用该属性
+        * ServletActionContext类访问Servlet API:
+            * static PageContext getPageContext()
+            * static HttpServletRequest getRequest()
+            * static HttpServletResponse getResponse()
+            * static ServletContext getServletContext()
+        * 输出Cookie:
+            * ${cookie.属性名.value}
+        * Action类中的Response不能向页面输出内容,因为Action是控制器,输出没有意义
+        
+# 配置Action
+    ? 让建立好的Action类被Struts容器知道,使之能被调用,Action是Struts2的基本程序单位
+    * 定义Action: Action由包来组织
+        * <package name="" namespace="" extends="struts-default">
+            <action name="" class="" method="">
+                <result name="">xxx.jsp</result>
+            </action>        
+          </package>
+    * Action的name属性是Action的名字也是Action需要处理的URL的前半部分
+    * Action的class属性不必须,默认使用ActionSupport类处理
+    * Action不直接产生响应,当处理完请求需要指定视图资源,所以配置Action的同时要配置逻辑视图和物理视图资源之间的映射
+        * <result name="">xxx.jsp</result>
+    * Action的name属性值一般由字母和数字组成,要使用/,需要设置struts.enable.SlashesInActionNames常量为true
+        * 若果使用 . 和 - 会产生未知异常
+        
+# 动态方法调用
+    ? 一个Action中有多个处理业务逻辑的方法: 动态方法调用解决使用哪个方法来处理
+    * DMI(Dynamic Method Invocation)动态方法调用
+    * action="ActionName!methodName.action"
+        * 使用某个Action的某个方法处理请求
+    * 处理请求逻辑的多个方法只是方法名不同,其它都一样
+    * 要使用DMI要设置常量struts.enable.DynamicMethodInvocation为true
+    
+# action元素的method属性
+    ? 将一个Action处理类定义成多个逻辑Action
+    * 定义method属性,让Action执行指定方法,而不是默认的execute方法
+    * 多个逻辑Action配置基本相同,造成代码冗余: 使用通配符的形式解决
+    
+# 通配符
+    ? 是另一种形式的动态方法调用
+    * action的name、class、method属性都支持通配符
+    * 通配符定义name属性，相当于一个action元素定义多个逻辑Action
+    * <action name="*XXX" class="" method="{1}">
+        * {1} 引用*的值
+    * class属性使用通配符：
+        - 多个Action类配置成一个action元素
+        - <action name="*Action" class="xxx.{1}Action"></action>
+    * 对Action进行输入校验
+        - 需要指定的校验文件ActionName-validation.xml
+    * result元素包含的内容也可以使用表达式
+        - <action name="*"> ...<result>/{1}.jsp</result>
+    * 如果同时匹配到多个action怎么办？
+        - 首先选择绝对匹配，如果没有就匹配最先找到的
+        - 应该把name为*的放到最后
+        
+# 默认Action
+    ？有些请求不需要进行过多的处理
+        - 可以由action的name为*的Action来处理
+        - 在容器中定义默认Action
+            * 当请求的URL在容器中找不到对应的Action时，系统会使用默认的Action来处理请求
+            * 配置：<default-action-ref name="">
+    * 最好所有请求都经过Action处理
+    
+# 处理结果
+    ？ Action只是个控制器，不能也不应该提供对浏览者的响应，处理完请求后，处理结果应该通过视图资源来实现
+
+# 处理结果的改进
+    * 处理结果返回普通的字符串(逻辑视图名)，系统把与之对应的物理视图呈现给浏览者
+    * 返回字符串使Action类和Struts框架分离，提高代码复用性
+    * Struts支持多种结果映射：将处理结果转向实际的不同的视图资源
+        - Jsp
+        - FreeMarker
+        - 下一个Action
+        
+# 配置结果：
+    ？处理结果与实际视图资源的映射
+    * 详细配置：
+        <result name="success默认" type="dispatcher默认类型">
+            <param name="location/parse">xxx.jsp</param>
+        </result>
+    * loaction：指定逻辑视图对应的实际视图
+    * parse：指定实际视图名是否可以使用OGNL表达式，默认值为true
+    * 简写
+        - name属性、type属性和param元素都可以省略，使用默认值
+        - type属性可以通过配置文件改编默认值
+        - 如果省略location，就把result元素包含的内容作为实际视图资源
+        
+# 处理结果类型
+    * struts2支持多种视图技术
+        - Jsp
+        - Velocity
+        - FreeMarker
+    ？结果类型决定了Action处理结束后，下一步将执行哪种类型的动作
+    * 结果类型必须实现com.opensymphony.xwork.Result,它是所有Action执行结果的通用接口
+    * 默认提供的一些结果类型：struts-default.xml配置文件中查看
+        - 自定义结果类型实现这个接口，并在配置文件中配置该结果类型
+            * <result-types>
+                <result-type name="" class="" default="省略type属性时使用该类型"/>
+              </result-types>
+    * 内建支持结果类型：
+        - chain
+        - chart
+        - dispatcher
+        - freemarker
+        - jasper
+        - jsf
+        - redirect
+        - redirect-action
+        - stream
+        - tiles
+        - velocity
+        - xslt
+        - plaintext
+    
+    * plaintext结果类型：显示实际资源的源代码
+        - 如果源代码中使用了中文，将显示乱码，可以为该类型指定字符编码解决该问题
+            * <result type="">
+                <param name="location">xxx.jsp</>
+                <param name="charSet">GBK</>
+              </result>
+              
+    * redirect结果类型
+        * 它和dispatcher结果类型相对
+            - 后者实现机制是forward请求转发
+            - 前者是重定向
+                * 丢失所有请求参数，请求属性，Action实例和封装的属性
+                * 重新产生一个请求
+                
+    * redirect-action结果类型
+        ？它和redirect相似，区别在于它使用ActionMapperFactory提供的ActionMapper来重定向请求
+        * 可以在一个Action处理结束后，将请求重定向到另一个Action，前一个Action的请求参数和请求属性都会丢失
+        * 如何配置：
+            <result type="">
+                <param name="actionName">actionName</>
+                <param name="namespace">/xxx</>
+            </result>
+            
+            * 重定向同一个命名空间的Action
+                <result name="" type="redirect-action">ActionName</>
+    * redirect和redirect-action区别
+        - 都是重新生成请求
+        - 一个生成对具体资源的请求
+        - 一个对其它Action的请求
+        - 都会丢失请求参数、请求属性、Action处理结果
+        
+# 动态结果
+    ？配置结果时，指定实际资源时使用表达式，当Action处理完结果时，动态转入实际视图资源
+    * 配置<result>元素时可以使用OGNL表达式，可以让%请求参数%来决定结果
+    
+# 请求参数决定结果
+    * 配置result元素指定视图资源可以使用:
+        - ${1}
+        - ${属性名} 或 完全体：${属性名.属性名.属性名}
+    * 如何配置：
+        - <result type="redirect">xxx.action?参数名=${属性名.属性名}</>
+        
+# 全局结果：
+    ？result元素可以放在<global-results>元素中配置，全局结果作用范围对所有Action都有效
+    * 如何配置：
+        <package>
+            <global-results>
+                <result name="">/${}.jsp</>
+            </>
+        </>
+    * <action>中定义的同名result会覆盖全局结果
+    
+# 属性驱动和模型驱动
+    ？模型驱动是struts1的方式，struts2也提供了这种方式
+        - 1使用ActionForm封装用户请求参数
+        - 2使用专门的JavaBean封装请求参数
+        
+    * 模型的作用：
+        - 1只能封装请求参数
+        - 2在此基础上还能封装处理结果
+    * 模型驱动？
+        使用单独的JavaBean实例来贯穿整个MVC流程，
+        使用单独的值对象封装请求参数和处理结果
+    * 属性驱动？
+        使用属性作为贯穿MVC流程的信息携带者
+        使用Action封装请求参数和处理结果
+    * 模型驱动怎么实现？
+        - 一个Action类(POJO)中只存在属性和相关的getter和setter方法
+        - 一个Action类须实现ModelDriven接口，其中有处理逻辑的方法，模型(POJO)的成员变量
+          和ModelDriven接口的实现方法Object getModel()方法，该方法关联Action和Model之间的关系
+        - 配置和属性驱动一样，不必配置模型对象
+        - 输出模型属性：
+            <s:property value="model.属性名">
+            <s:property value="属性名">
+    * 两者的优劣？
+    
+# Struts2的异常机制
+    * 在业务逻辑方法中处理异常麻烦，最好使用声明式的方式管理异常处理
+    * 异常处理哲学：
+        - 可以通过struts.xml配置异常的处理
+        - 当业务逻辑方法抛出异常将根据配置文件中的异常映射，转入指定的视图资源
+        - 要想使用这种机制必须开启这个功能，开启需要一个拦截器(struts-default.xml中定义了)
+        
+# 声明式异常捕捉
+    * 配置<exception-mapping />元素
+        - 属性：
+            exception：异常类型
+            result：出现该异常时转入哪个视图
+    * 种类(位置区分)
+        - 局部异常映射
+            作为action元素的子元素
+        - 全局异常映射
+            作为<global-exception-mappings>元素的子元素
+    * 同类型异常局部将覆盖全局
+    
+# 输出异常信息
+    * 在异常处理页面显示异常信息
+        - <s:property value="exception"/>：输出异常对象本身
+            * 这种方式可以使用表达式
+        - <s:property value="exceptionStack"/>：输出异常堆栈信息
+    * struts1不能输出堆栈信息，只能输出异常对象的message属性值
