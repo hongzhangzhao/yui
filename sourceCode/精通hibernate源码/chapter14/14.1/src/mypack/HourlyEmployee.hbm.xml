@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+   <class name="mypack.HourlyEmployee" table="HOURLY_EMPLOYEES">
+      <id name="id" type="long" column="ID">
+        <generator class="increment"/>
+      </id>
+   
+      <property name="name" type="string" column="NAME" />
+ 
+      <property name="rate" column="RATE" type="double" />
+
+      <many-to-one
+        name="company"
+        column="COMPANY_ID"
+        class="mypack.Company"
+      />
+
+    </class>
+ 
+</hibernate-mapping>

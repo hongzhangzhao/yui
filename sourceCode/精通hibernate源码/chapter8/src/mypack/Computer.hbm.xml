@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.Computer" table="COMPUTERS" >
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="type" type="string" >
+        <column name="COMPUTER_TYPE" length="15" />
+    </property>
+    
+    <component name="cpuBox" class="mypack.CpuBox">
+            <parent name="computer" />
+            
+            <property name="type" type="string" >
+                <column name="CPUBOX_TYPE" length="15" />
+            </property>
+            
+            <component name="graphicsCard" class="mypack.GraphicsCard">
+               <parent name="cpuBox" />
+              
+               <property name="type" type="string" >
+                  <column name="GRAPHICSCARD_TYPE" length="15" />
+               </property>
+
+            </component>
+
+            <many-to-one
+        		name="vendor"
+        		column="CPUBOX_VENDOR_ID"
+        		class="mypack.Vendor"
+        		not-null="true" 
+            />
+    </component>
+  </class>
+ 
+
+</hibernate-mapping>

@@ -1,0 +1,70 @@
+package mypack;
+import java.sql.*;
+import java.io.*;
+/**
+ * Title:
+ * Description:
+ * Copyright:    Copyright (c) 2004
+ * Company:
+ * @author
+ * @version 1.0
+ */
+
+public class Test {
+
+  public Test() {
+  }
+
+  public static void main(String args[])throws Exception{
+
+Connection con;
+Statement stmt;
+ResultSet rs;
+//加载驱动程序，下面的代码为加载MySQL驱动程序
+Class.forName("com.mysql.jdbc.Driver");
+//注册MySQL驱动程序
+DriverManager.registerDriver(new com.mysql.jdbc.Driver());
+//用适当的驱动程序连接到数据库
+String dbUrl =  "jdbc:mysql://localhost:3306/sampleDB?useUnicode=true&characterEncoding=GB2312";
+
+String dbUser="root";
+String dbPwd="";
+//建立数据库连接
+con = java.sql.DriverManager.getConnection(dbUrl,dbUser,dbPwd);
+
+PreparedStatement preparedStatement =
+      con.prepareStatement("INSERT INTO customers(id,image) VALUES(?,?)");
+File imageFile = new File("e:\\\\hibernate\\\\chapter8\\\\zhanglaosan.gif");
+InputStream inputStream = new FileInputStream(imageFile);
+preparedStatement.setString(1,"0738425826");
+preparedStatement.setBinaryStream(2,inputStream,(int)(imageFile.length()));
+preparedStatement.executeUpdate();
+
+
+//创建一个JDBC声明
+stmt = con.createStatement();
+//查询记录
+rs = stmt.executeQuery("SELECT * from customers");
+//输出查询结果
+
+System.out.println("<table border=1 width=400>");
+while (rs.next())
+{
+
+InputStream in = rs.getBinaryStream("IMAGE");
+
+System.out.println(in.available());
+System.out.println(in.read());
+}
+System.out.println("</table>");
+
+
+//关闭数据库连结
+rs.close();
+stmt.close();
+con.close();
+
+
+}
+}
+

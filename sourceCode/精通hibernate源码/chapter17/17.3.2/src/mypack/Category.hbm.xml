@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.Category" table="CATEGORIES" >
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="name" column="NAME" type="string" />
+       
+ <list name="items" table="CATEGORY_ITEM"
+        lazy="true"
+        cascade="save-update">
+        <key column="CATEGORY_ID" />
+        <index column="POSITION" />
+        <many-to-many class="mypack.Item" column="ITEM_ID" />
+</list>
+
+       
+  </class>
+
+</hibernate-mapping>

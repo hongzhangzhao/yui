@@ -1,0 +1,4 @@
+<codegen>
+    <generate renderer="net.sf.hibernate.tool.hbm2java.BasicRenderer"/>
+    <generate renderer="net.sf.hibernate.tool.hbm2java.FinderRenderer" suffix="Finder"  package="mypack"/>
+</codegen>

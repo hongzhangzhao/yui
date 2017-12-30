@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping  package="mypack">
+
+   <class name="Order" dynamic-insert="true" dynamic-update="true" >
+     
+      <id name="id">
+        <generator class="increment"/>
+      </id>
+   
+      <property name="orderNumber" column="ORDER_NUMBER"/>
+      <property name="price" />
+
+     <many-to-one
+        name="customer"
+        column="CUSTOMER_ID"
+        class="Customer"
+        not-null="true" 
+     />
+
+   </class>
+ </hibernate-mapping>

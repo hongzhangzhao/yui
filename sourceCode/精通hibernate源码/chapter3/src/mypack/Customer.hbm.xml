@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping>
+
+  <class name="mypack.Customer" table="CUSTOMERS" >
+    <meta attribute="class-description">
+      Represents a single customer.
+      @author LindaSun
+    </meta>
+    
+    <meta attribute="class-scope">public</meta>
+    
+    <id name="id" type="long" column="ID" >
+      <meta attribute="scope-set">protected</meta>
+      <generator class="native"/>
+    </id>
+
+    <property name="name" type="string" >
+      <meta attribute="use-in-tostring">true</meta>
+      <meta attribute="finder-method">findByName</meta> 
+      <column name="NAME" length="15" not-null="true" unique="true" />
+    </property>
+    
+    <property name="registeredTime" type="timestamp" >
+      <meta attribute="field-description">When the customer was registered</meta>
+      <meta attribute="use-in-tostring">true</meta>
+      <column name="REGISTERED_TIME" index="IDX_REGISTERED_TIME" sql-type="timestamp" />
+    </property>
+    
+     
+    <property name="age" type="int">
+      <meta attribute="field-description">How old is the customer</meta>
+      <meta attribute="use-in-tostring">true</meta>
+      <column name="AGE" check="AGE>10" not-null="true"/>
+    </property>
+    
+    <property name="sex" type="char" column="SEX"/>
+    
+    <property name="married" type="boolean" column="IS_MARRIED">
+      <meta attribute="field-description">Is the customer married</meta>
+      <meta attribute="use-in-tostring">true</meta>
+    </property>
+
+    <property name="description" type="string">
+       <meta attribute="use-in-tostring">true</meta>
+       <column name="DESCRIPTION" sql-type="text"/>
+    </property>
+	
+  </class>
+ 
+</hibernate-mapping>

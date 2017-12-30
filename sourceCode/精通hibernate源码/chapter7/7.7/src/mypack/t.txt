@@ -1,0 +1,18 @@
+findDirty()：决定Session缓存中哪些对象是脏对象，Session的flush()方法调用此方法。如果返回null，Session就会按默认的方式进行脏检查。
+          Called from flush(). 
+instantiate(Class clazz, Serializable id)：创建实体类的实例。如果返回null，Hibernate就会按默认的方式 创建实体类的实例。
+         
+ Boolean isUnsaved(Object entity)：如果返回true，表示 
+          Called when a transient entity is passed to saveOrUpdate(). 
+ void onDelete(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) 
+          Called before an object is deleted. 
+ boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) 
+          Called when an object is detected to be dirty, during a flush. 
+ boolean onLoad(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) 
+          Called just before an object is initialized. 
+ boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) 
+          Called before an object is saved. 
+ void postFlush(Iterator entities) 
+          Called after a flush that actually ends in execution of the SQL statements required to synchronize in-memory state with the database. 
+ void preFlush(Iterator entities) 
+          Called before a flush 

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.LineItem" table="LINEITEMS" >
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="quantity" column="QUANTITY" type="int" />
+    <property name="basePrice" column="BASE_PRICE" type="double" />
+    
+    <many-to-one name="order" column="ORDER_ID" class="mypack.Order" not-null="true" />
+    <many-to-one name="item" column="ITEM_ID" class="mypack.Item" not-null="true" />
+
+ 
+  </class>
+</hibernate-mapping>

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.Order" table="ORDERS" >
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="orderNumber" column="ORDER_NUMBER" type="string" />
+    <property name="price" formula=
+        "(select  sum(line.BASE_PRICE*line.QUANTITY)  from LINEITEMS line where line.ORDER_ID=ID)" />
+    <set name="lineItems" lazy="true" table="LINEITEMS" >
+        <key column="ORDER_ID" />
+        <composite-element class="mypack.LineItem" >
+          <parent name="order" />
+          <many-to-one name="item" class="mypack.Item" column="ITEM_ID" not-null="true"/>
+          <property name="quantity" column="QUANTITY" type="int" not-null="true" />
+          <property name="basePrice" column="BASE_PRICE" type="double" not-null="true" />
+         </composite-element> 
+    </set>
+     
+  </class>
+
+</hibernate-mapping>

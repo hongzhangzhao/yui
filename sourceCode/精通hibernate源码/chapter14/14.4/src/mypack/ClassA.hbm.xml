@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+   <class name="mypack.ClassA" table="TABLE_A" discriminator-value="A" >
+      <id name="id" type="long" column="ID">
+        <generator class="increment"/>
+      </id>
+      <discriminator column="A_TYPE" type="string"  />  
+      <property name="a1" type="string" column="A1" />
+
+      <subclass name="mypack.ClassC" discriminator-value="C" >
+         <property name="c1" column="C1" type="string" />
+      </subclass>
+
+      <subclass name="mypack.ClassD" discriminator-value="D" >
+        <property name="d1" column="D1" type="string" />
+ 
+        <subclass name="mypack.ClassG" discriminator-value="G" >
+           <property name="g1" column="G1" type="string" />
+        </subclass>
+        
+        <subclass name="mypack.ClassH" discriminator-value="H" >
+           <property name="h1" column="H1" type="string" />
+        </subclass>
+
+      </subclass>
+    </class>
+</hibernate-mapping>
+

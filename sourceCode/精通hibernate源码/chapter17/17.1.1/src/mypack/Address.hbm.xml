@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.Address" table="ADDRESSES" >
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="city" column="CITY" type="string" />
+    <property name="province" column="PROVINCE" type="string" />
+    <property name="street" column="STREET" type="string" />
+    <property name="zipcode" column="ZIPCODE" type="string" />
+        
+    <one-to-one name="customer" 
+        class="mypack.Customer"
+       property-ref="homeAddress"
+    />
+
+  </class>
+</hibernate-mapping>

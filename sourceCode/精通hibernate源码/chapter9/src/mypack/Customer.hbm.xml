@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.Customer" table="CUSTOMERS" dynamic-update="true">
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="name" type="mypack.NameCompositeUserType" >
+        <column name="FIRSTNAME" length="15" />
+        <column name="LASTNAME" length="15" />
+    </property>
+    
+  
+    <property name="homeAddress" type="mypack.AddressUserType" >
+        <column name="HOME_STREET" length="15" />
+        <column name="HOME_CITY" length="15" />
+        <column name="HOME_PROVINCE" length="15" />
+        <column name="HOME_ZIPCODE" length="6" />
+    </property>
+
+    <property name="comAddress" type="mypack.AddressUserType" >
+        <column name="COM_STREET" length="15" />
+        <column name="COM_CITY" length="15" />
+        <column name="COM_PROVINCE" length="15" />
+        <column name="COM_ZIPCODE" length="6" />
+    </property>
+
+    
+    <property name="gender" type="mypack.GenderUserType" >
+        <column name="SEX" length="1" />
+     </property>
+
+     <property name="phone" type="mypack.PhoneUserType" >
+        <column name="PHONE" length="8" />
+     </property>
+
+   
+  </class>
+
+</hibernate-mapping>

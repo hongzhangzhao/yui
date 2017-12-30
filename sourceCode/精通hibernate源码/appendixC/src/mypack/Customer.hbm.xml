@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE hibernate-mapping PUBLIC
+    "-//Hibernate/Hibernate Mapping DTD 2.0//EN" 
+    "http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+
+<hibernate-mapping
+>
+    <class
+        name="mypack.Customer"
+        table="CUSTOMERS"
+        dynamic-update="false"
+        dynamic-insert="false"
+        select-before-update="false"
+        optimistic-lock="version"
+    >
+
+        <id
+            name="id"
+            column="ID"
+            type="java.lang.Long"
+            unsaved-value="null"
+        >
+            <generator class="increment">
+              <!--  
+                  To add non XDoclet generator parameters, create a file named 
+                  hibernate-generator-params-Customer.xml 
+                  containing the additional parameters and place it in your merge dir. 
+              --> 
+            </generator>
+        </id>
+
+        <property
+            name="name"
+            type="java.lang.String"
+            update="false"
+            insert="true"
+            access="property"
+            column="NAME"
+            length="15"
+            not-null="true"
+        />
+
+        <component
+            name="address"
+            class="mypack.Address"
+        >
+        <property
+            name="street"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            access="property"
+            column="STREET"
+            length="128"
+        />
+
+        <property
+            name="city"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            access="property"
+            column="CITY"
+            length="128"
+        />
+
+        <property
+            name="province"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            access="property"
+            column="PROVINCE"
+            length="128"
+        />
+
+        <property
+            name="zipcode"
+            type="java.lang.String"
+            update="true"
+            insert="true"
+            access="property"
+            column="ZIPCODE"
+            length="6"
+        />
+
+        </component>
+
+        <set
+            name="orders"
+            lazy="true"
+            inverse="true"
+            cascade="save-update"
+            sort="unsorted"
+        >
+
+              <key
+                  column="CUSTOMER_ID"
+              >
+              </key>
+
+              <one-to-many
+                  class="mypack.Order"
+              />
+
+        </set>
+
+        <!--
+            To add non XDoclet property mappings, create a file named
+                hibernate-properties-Customer.xml
+            containing the additional properties and place it in your merge dir.
+        -->
+
+    </class>
+
+</hibernate-mapping>

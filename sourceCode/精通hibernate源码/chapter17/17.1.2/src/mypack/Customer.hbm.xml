@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.Customer" table="CUSTOMERS" >
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="name" column="NAME" type="string" />
+       
+    <one-to-one name="address" 
+        class="mypack.Address"
+        cascade="all" 
+     />
+        
+  </class>
+
+</hibernate-mapping>

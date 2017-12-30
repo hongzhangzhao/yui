@@ -1,0 +1,44 @@
+<ehcache>
+
+   <diskStore path="C:\\temp"/>
+
+   <defaultCache
+        maxElementsInMemory="10000"
+        eternal="false"
+        timeToIdleSeconds="120"
+        timeToLiveSeconds="120"
+        overflowToDisk="true"
+        />
+
+    <cache name="mypack.Customer"
+        maxElementsInMemory="1"
+        eternal="false"
+        timeToIdleSeconds="300"
+        timeToLiveSeconds="600"
+        overflowToDisk="true"
+    />
+
+    <cache name="mypack.Customer.orders"
+        maxElementsInMemory="1000"
+        eternal="true"
+        overflowToDisk="false"
+   /> 
+
+    <cache name="mypack.Order"
+        maxElementsInMemory="10000"
+        eternal="false"
+        timeToIdleSeconds="300"
+        timeToLiveSeconds="600"
+        overflowToDisk="true"
+    /> 
+
+    <cache name="customerQueries"
+        maxElementsInMemory="1000"
+        eternal="false"
+        timeToIdleSeconds="300"
+        timeToLiveSeconds="600"
+        overflowToDisk="true"
+    />
+
+
+</ehcache>

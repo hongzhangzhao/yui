@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+   <class name="mypack.ClassB" table="TABLE_B">
+      <id name="id" type="long" column="ID">
+        <generator class="increment"/>
+      </id>
+      <property name="b1" type="string" column="B1" />
+
+      <joined-subclass name="mypack.ClassE"  table="TABLE_E">
+         <key column="B_ID" />
+         <property name="e1" column="E1" type="string" />
+         <property name="e2" column="E2" type="string" />
+         <property name="e3" column="E3" type="string" />
+         <property name="e4" column="E4" type="string" />
+         <property name="e5" column="E5" type="string" />
+         <property name="e6" column="E6" type="string" />
+      </joined-subclass >
+
+      <joined-subclass name="mypack.ClassF"  table="TABLE_F">
+         <key column="B_ID" />
+         <property name="f1" column="F1" type="string" />
+         <property name="f2" column="F2" type="string" />
+         <property name="f3" column="F3" type="string" />
+         <property name="f4" column="F4" type="string" />
+         <property name="f5" column="F5" type="string" />
+         <property name="f6" column="F6" type="string" />
+      </joined-subclass >
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.Item" table="ITEMS" >
+    <id name="id" type="long" column="ID">
+      <generator class="increment"/>
+    </id>
+
+    <property name="name" column="NAME" type="string" />
+    <property name="basePrice" column="BASE_PRICE" type="double" />
+    
+     <set name="lineItems" lazy="true" inverse="true" table="LINEITEMS" >
+        <key column="ITEM_ID" />
+        <composite-element class="mypack.LineItem" >
+          <parent name="item" />
+          <many-to-one name="order" class="mypack.Order" column="ORDER_ID" not-null="true"/>
+          <property name="quantity" column="QUANTITY" type="int" not-null="true" />
+          <property name="basePrice" column="BASE_PRICE" type="double" not-null="true" />
+         </composite-element> 
+    </set>
+ 
+  </class>
+</hibernate-mapping>

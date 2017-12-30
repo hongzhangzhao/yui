@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping
+PUBLIC "-//Hibernate/Hibernate Mapping DTD 2.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-2.0.dtd">
+<hibernate-mapping >
+
+  <class name="mypack.AuditLogRecord" table="AUDIT_LOGS" >
+    <id type="long" column="ID">
+      <generator class="native"/>
+    </id>
+
+    <property name="message" type="string" access="field"
+        column="MESSAGE" not-null="true" />
+       
+   <property name="entityId" type="long" access="field"
+        column="ENTITY_ID"  not-null="true" />
+         
+   <property name="entityClass" type="class" access="field"
+        column="ENTITY_CLASS"  not-null="true" />
+   
+  <property name="created" type="timestamp" access="field"
+        column="CREATED"  not-null="true" />
+  
+ </class>
+
+</hibernate-mapping>
