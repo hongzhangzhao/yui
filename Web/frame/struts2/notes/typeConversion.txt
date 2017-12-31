@@ -64,19 +64,130 @@
         内容：
             * Key=Action属性名
             * Value=转换器全限定类名
-        放置在对应Action同一个目录下
+        > 放置在对应Action同一个目录下 <
     
     * 当用户提交参数时，Action的属性首先被类型转换器处理
     
 # 全局类型转换器：
     * 在多个Action中都含有同类型需要转换的属性时使用
     * 同一个Action中有多个同类型属性，可以使用一个局部类型转换器注册文件完成注册
+        - 两个参数输入项的参数类型相同，name不同
+        - 在Action中表现为两个同类型的名字不同的成员变量
+            * User u1
+            * User u2
     * 全局转换器文件：xwork-conversion.properties
         - 内容：复合类型(对象类型)=对应类型转换器
         - 它将对所有该类型的属性起作用
+        > 放置在struts.xml同一目录下 <
         
     * 符合日期格式的字符串，会被s2转换成Date类型
         - s2内建了一些类型转换器
         
 # 基于Struts2的类型转换器
+    * s2提供一个DefaultTypeConverter的子类(StrutsTypeConverter)来简化转换器的实现   
+    * 实现这个类，并重写两个方法：
+        - convertFromString：字符串 -> 对象
+        - convertToString：对象 -> 字符串
+    > 由一个方法完成双向转换，改进为由两个方法分别完成不同的转换逻辑
+    
+# 数组属性的类型转换器
+    * 请求参数是字符串数组
+        - 1个以上的参数输入项所提交的参数name相同
+        - one:<input name="same">
+        - two:<input name="same">
+        > 以上请求参数必须通过getParameterValues方法类获取参数       
+    * Action对应的属性类型必须是数组类型或List类型，他俩完全相通
+    @ 类型转换器最终作用于Action的每个属性，Action每包含一个需要类型转换的属性，convertValue方法执行一次
+    
+# 集合属性的类型转换器
+    * 与数组属性的类型转换器的区别只是把Action的属性替换成集合类型
+    * List对象和数组几乎可以互换使用
+        - 即使Action用List封装请求参数，类型转换器也可以将字符串数组转换成%对象类型数组%
+        > Strut2默认支持数组和List之间的转换 <
+      
+# 另一种转换方式
+    ! 不需要类型转换器
+    ? 利用OGNL表达式使请求参数向复合类型转换变得简单
+    * 通过OGNL表达式直接生成Action的复合类型属性
+    * 表单域的name对应复合属性的属性
+        - <input name="属性.属性">，这是一种表达式的写法
+        - 类似对象属性.属性 = 用户输入，直接赋值的操作
+    > 注意事项：
+        * 必须为Action的复合属性提供无参构造函数
+        * 为复合属性中的属性提供setter方法
+
+    @ 直接生成Collection 或 Map
+        * 直接生成Map
+            - Action复合属性：Map<String, ◇> △
+            - <input name="△['key'].◇的属性">
+            - △.get(key).◇属性 = 用户输入
+            - 通过表单域name的值以表达式的形式直接给Action属性赋值
+            - 输出：
+                <s:property value="△['one'].◇属性"/>
+            
+# Struts2的Collection和Map支持
+    * 当Action的List属性没有使用泛型，类型转换器在不清楚集合中元素的具体类型将失去效用，咋办？
+        - 定义泛型
+        - 使用局部转换器配置文件来指定集合中元素的具体类型
+            * ActionName-conversion.properties：Element_集合属性名=集合属性中元素类名
+                - Map类型属性：
+                    * key_Map属性名=key的类名
+                    * Element_Map属性名=value的类名
+        - 输出List元素
+            * <s:property value="List属性名[index].元素属性名"/>
+            > Set集合是无序的，没办法通过索引来访问元素，%s2提供了指定索引属性的方法%下面将提到
+            
+# 指定集合元素的索引属性
+    ? Set元素的属性设为key来唯一标识该元素
+    * 局部转换器文件中设定：KeyProperty_Set属性名=元素的索引属性名
+    * 通过索引属性访问元素属性：
+        - <s:property value="Set属性名('元素索引属性名').元素属性名"/>
+    ! 访问指定元素：
+        - Set用的是这个()
+        - 数组、List、Map用这个[]
+        
+# Strut2内建的类型转换器
+    ! s2提供%字符串%转向大多数类型的转换器，所以大部分情况下无序自定义转换器:
+        * boolean and Boolean
+        * char and Character
+        * int and Integer
+        * long and Long
+        * float and Float
+        * double and Double
+        * Date
+        * 数组：默认数组元素是字符串
+        * 集合：默认情况下，假定集合元素是String类型，并创建一个新的ArrayList封装所有字符串
+    >>> 数组的类型转换将按照数组元素的类型来单独转换每一个元素，
+        其它的类型转换，转换无法完成，系统抛出错误
+        
+# 类型转换中的错误处理
+    * 类型转换是作用于用户输入的参数，如果参数不符合条件将无法转换，情况如下：
+        * 误操作输入
+        * 恶意输入
+    
+    * 表现层数据涉及两个处理：
+        - 数据校验
+        - 类型转换
+        ! 它俩是紧密相关的
+     
+    * 只有用户输入的是有效数据，才能类型转换，即使可以转换也可能是非法数据，此时再做数据校验
+    
+# 类型转换的错误处理流程
+    ? 用户发送请求 > 处理类型转换 > 转换出现错误 > conversionError拦截器 > 跳转到名为input的逻辑视图
+    * s2提供一个conversionError拦截器，当转换类型出现错误，它将对应错误封装成表单域错误(fieldError)，
+      并将错误信息放入ActionContext中
+    * conversionError拦截器是一个Throws处理：
+        - 当系统抛出异常时启动，负责处理异常
+        - 所以类型转换器只需完成类型转换逻辑，不用关心异常处理逻辑
+    ! 为了处理类型转换的错误，或是对数据校验，Action类都应该继承ActionSupport类，
+      它提供了类型转换和数据校验的许多基础工作
+      
+# 处理类型转换错误
+    * 继承ActionSupport
+    * 提供input逻辑视图
+    
+# 输出类型转换错误
+    * <s:fielderror />
+    
+# 处理集合属性的转换错误
     * 
