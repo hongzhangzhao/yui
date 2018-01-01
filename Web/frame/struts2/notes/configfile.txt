@@ -104,7 +104,7 @@
 # 动态方法调用
     ? 一个Action中有多个处理业务逻辑的方法: 动态方法调用解决使用哪个方法来处理
     * DMI(Dynamic Method Invocation)动态方法调用
-    * action="ActionName!methodName.action"
+    * action="ActionName!methodName.action"，感叹号意思是调用，某个Action调用某个方法处理用户请求
         * 使用某个Action的某个方法处理请求
     * 处理请求逻辑的多个方法只是方法名不同,其它都一样
     * 要使用DMI要设置常量struts.enable.DynamicMethodInvocation为true
