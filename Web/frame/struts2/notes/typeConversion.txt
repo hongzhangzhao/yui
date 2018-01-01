@@ -184,10 +184,18 @@
       
 # 处理类型转换错误
     * 继承ActionSupport
-    * 提供input逻辑视图
+    * 提供input逻辑视图名
     
 # 输出类型转换错误
     * <s:fielderror />
-    
+    * 该标签输出的是英文信息，要改成中文提示需在国际化资源文件(globalMessages.properties)中添加：
+        - xwork.default.invalid.fieldvalue={0}字段类型转换失败！
+    ! 资源文件中包含非西欧字符，要用native2ascii命令来处理该文件
+    * 对特定字段指定特别的提示信息：
+        - 局部资源文件ActopName.properties
+        - 添加内容：invalid.fieldvalue.属性名=提示信息
+        > 例如：invalid.fieldvalue.birth=生日信息必须满足yyyy-mm-dd格式
+        
 # 处理集合属性的转换错误
-    * 
+    * 三个同名的请求参数，服务器只会接收一个，它是一个字符串数组
+    * 不管哪个或多少个表单域转换失败，只显示一条失败提示
