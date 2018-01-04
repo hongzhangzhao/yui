@@ -1,0 +1,243 @@
+-----------拦截器----------
+
+
+>>>
+    * 拦截器是s2的重要组成部分，可以理解为一个空容器
+    * 大量拦截器完成s2大部分操作(内建拦截器)
+        - servlet-config：传递请求和响应的实例给Action
+        - fileUpload：解析文件域，把文件域设置成Action的三个属性
+    * 通过配置文件启用或禁用拦截器(动态配置)
+        - 可插拔式设计，扩展性好
+    * 自定义拦截器：提供自己的拦截器实现类，配置在struts.xml中即可
+    * 多个Action中的重复动作定义在拦截器中，提高代码复用
+    * s2的拦截器是一种AOP设计哲学，它允许开发人员以一种简单的方式进行AOP方式的开发
+<<<
+
+# 理解拦截器
+    * 动态拦截发送到Action的请求
+    * 在Action执行前后插入某些代码(多个Action重复指定的代码)
+    * 提取重复代码定义在拦截器中
+    * 拦截器机制是一种软件复用的原则
+    
+# 理解DRY原则(Don't repeat yourself)
+    * 软件开发领域重要规则：不要写重复代码
+    * 在多个地方重复写相同代码，不如只写一次(定义一个方法)，在用到的地方去引用
+    * 方便软件后期升级、维护
+    ! 在同一个系统中相同的代码写了两次以上(有问题)，会是噩梦
+    
+# 拦截器的意义
+    > 是对调用方法的改进
+    * 某个实例(拦截器)：指行为上的(就是个Java普通类)
+    * 类(拦截器)：代码角度
+        - 包含方法：比较特殊，它在目标方法调用之前｛自动｝执行
+    ! 没有自动的概念，任何事都是代码驱动，自动指的是由系统来驱动，开发者不用关心
+    
+    * 直接调用方法(1)和拦截器(2)的区别：
+        1 显示通过代码调用目标方法
+        2 由系统完成方法调用，不需手动调用目标方法
+            - 解耦
+            - 由代码层次上升到更高层次
+            - 允许改变被调用方法的方法体或调用的目标方法
+            
+# 拦截器的实现原理
+    > 拦截器机制的用处，就是相对于传统方法调用的改进之处
+    ? 系统怎么知道调用拦截器的方法，调用哪个拦截器的方法
+        * 代理的方式调用(大部分时候)
+            - 动态代理只能对实现了接口的实例来生成代理
+        * 创建接口
+        * 接口实现类(委托类)
+        * 拦截器类(普通Java对象)：在执行委托类的方法前后插入它的方法
+        * InvoactionHandler实现类(代理类)：动态调用目标对象的方法
+            - 创建委托类的成员变量
+            - 创建拦截器的成员变量
+            - 实现invoke方法：它是实现在执行委托类方法的前后插入拦截器类方法逻辑的方法
+            ! 与拦截器类耦合
+            ! 与被拦截的方法耦合
+            ! 解决耦合：
+                * 拦截器类在配置文件中指定
+                * 被拦截的目标方法也是
+            > s2在struts.xml中配置使用哪个拦截器，不用指定拦截哪个方法(Action处理请求只有一个方法)
+        * 创建代理工厂：根据委托对象生成代理对象
+            - Proxy.newProxyinstance(委托类.class.getClassLoader(),,)：通过这个方法返回对于目标对象的代理对象
+                * 根据接口数组动态创建代理对象
+                * JVM在内存中动态创建代理对象
+                * 代理对象实现了接口数组中的所有接口
+                $ 动态代理：被代理的类必须实现接口，否则无法为其构造响应的动态实例
+                
+# 拦截器和AOP的关系
+    > AOP:从程序运行角度考虑程序的流程，取得业务处理过程的切面，在特定切面通过系统自动插入特定方法，
+      面向的是程序运行中的各个步骤，以松耦合方式组合各个步骤
+    * AOP重要概念：
+        - 目标对象
+        - 被插入的处理方法：不能独立存在，需要载体(拦截器)
+        - 代理对象：AOP代理(系统动态生成的对象)，代替目标对象，包含目标对象所有方法
+    * s2的拦截器机制来自WebWork
+    
+# 拦截器在Struts2中的作用
+    * 类型转换
+    * 输入校验
+    * 文件上传
+    * 放置表单多次提交
+    > 以上动作有的Action需要实现：为以上动作定义拦截器以动态方式自由组合
+    * s2将所有Action都需要的功能配置成默认拦截器
+
+## 拦截器配置初步
+    > s2以可插拔方式管理Action需要完成的通用操作；
+      通用操作定义成拦截器方法，配置在struts.xml文件中的Action
+    
+# 配置拦截器
+    > 拦截器机制基于struts.xml配置文件实现的
+    * <interceptor name="拦截器名" class="拦截器实现类">
+        <param name="参数名">参数值</param>
+      </interceptor>
+    * 多个拦截器组成拦截器栈
+        <interceptor-stack name="栈名">
+            <interceptor-ref name=""/>
+            ......
+        </interceptor-stack>
+    ! 由于拦截器栈和拦截器功能几乎相同可能会出现拦截器栈里再次包含拦截器栈
+        - 拦截器栈中引用的拦截器是一个拦截器栈
+        - 目的为了软件复用
+    * 系统为拦截器指定参数有两个时机：
+        - 定义拦截器时指定(定义时)：默认值
+            * <interceptor>指定参数
+        - 使用拦截器时指定(配置时)：在Action中使用该拦截器动态分配
+            * 为<interceptor-ref>增加[<param name="参数">参数值<param/>]子元素为拦截器指定参数
+            * 在两个时机为同一个参数指定不同值，它会覆盖默认的
+    * 拦截器一般定义在result元素之后
+    
+# 使用拦截器
+    * 拦截器在Action的execute方法执行之前被执行
+    * 在Action内配置<interceptor-ref name="defaultStack"></>
+    
+# 默认拦截器
+    * 当配置一个包时，如果指定了拦截器，要想使用默认拦截器必须显示的指定，否则默认拦截器自动生效
+    * 配置默认拦截器：<package>的子元素<default-interceptor-ref name="拦截器名"/>
+        - 作用该包下的所有Action，该包的默认拦截器
+        - 必须指定name属性=存在的拦截器的名字
+        - 每个包只能有一个
+        - <param name="参数名">参数值</>子元素配置参数
+    ! 定义多个默认拦截器：多个拦截器打包成拦截器栈，指定拦截器栈为默认
+    * 配置时的参数会覆盖定义时的参数
+    * struts-default.xml：默认拦截器配置在其中
+        - <interceptors>
+        - <interceptor>
+        - <interceptor-stack>
+        - <interceptor-ref>
+        - <param>
+    
+## 使用自定义拦截器
+    >
+    
+# 实现拦截器类
+    * 自定义拦截器需要实现的接口com.opensymphony.xwork2.interceptor.Interceptor
+        - void destory()
+        - void init()
+        - String intercept(ActionInvocation invocation) throws Exception
+            * 实现拦截
+            * 像Action的execute方法
+            * 返回逻辑视图，如果直接返回一个字符串，系统直接跳转到该字符串对应的实际视图，
+              不会调用被拦截的Action
+            * 方法参数包含被拦截的Action引用，调用参数的invoke方法将控制权转到下一个控制器或
+              是Action的execute方法
+            * invocation参数调用getAction方法获得Action实例
+                - 解析请求参数为Action属性赋值(系统params拦截器)
+                - 将请求实例和响应实例传给Action(servlet-config拦截器)
+    * s2提供了以上接口的实现抽象类AbstractInterceptor类，它空实现了destory和init方法(自定义拦截器不用申请资源用不到这两个方法)
+    
+# 使用拦截器
+    * <interceptor>定义拦截器
+    * <interceptor-ref>使用拦截器
+    
+    
+## 深入拦截器
+
+# 方法过滤
+    * 只拦截Action的部分方法
+    * 通过MethodFilterInterceptor类实现，它是AbstructInterceptor类的子类
+        - 它重写了AbstructInterceptor的intercept方法，还有一个doIntercept的抽象方法
+        - intercept方法实现对Action的拦截行为(过滤方法的逻辑)，拦截逻辑通过回调doIntercept方法实现
+            * 只需要重写doIntercept方法
+        - 定义过滤方法的方法：
+            * setExcludeMethods方法：设置不被拦截的方法
+            * setIncludeMethods方法：设置需要拦截的方法
+            ! 同一个方法两边都设置了，这个方法会被拦截
+    * 配置方法过滤：
+        <interceptor-ref name="xxx">
+            <param name="xxx">yyy</param>
+            <param name="excludeMethods">execute,haha</param>:指定多个方法用逗号分隔
+            <param name="includeMethods">execute</param>
+        </interceptor-ref>
+    * s2提供的方法过滤拦截器：
+        - TokenInterceptor
+        - TokenSessionStoreintercept
+        - DefaultWorkflowInterceptor
+        - ValidationInterceptor
+        
+# 拦截器的执行顺序
+    * 引用在前的拦截器在execute方法执行之前先作用，引用在后的拦截器在execute方法执行完后先作用
+    
+# 拦截结果的监听器
+    > 精确定义execute方法结束后，再处理result执行的动作
+    * 必须实现PreResultListener接口：监听器
+        - public void beforeResult(ActionInvocation invocation, String resultCode)
+            * resultCode = execute方法的返回值
+            * invocation意义不大，因为execute方法已经结束
+                ! 千万不能调用invoke方法，会进入死循环
+    * 必须手动注册给某个拦截器
+        * intercept(ActionInvocation invocation)｛
+            invocation.addPreResultListener(监听器实例);
+          ｝
+    * 在execute方法执行结束后执行监听器
+    
+# 覆盖拦截器中特定拦截器的参数
+    > 覆盖拦截器栈中某个拦截器的特定参数：
+        <interceptor-ref name="my-stack">
+            <param name="拦截器名.参数名">改名后的拦截器</param>
+        </interceptor-ref>
+        
+## Struts2内建的拦截器
+    
+# 内建拦截器
+    > s2内建了大量的拦截器，以key-value对的形式配置在struts-default.xml文件中
+        - name是拦截器的名字 = 引用点
+        - value是拦截器的实现类
+        - 在定义package时继承struts-default包可自由使用呢内建拦截器
+    * 拦截器：
+        - alias：在不同请求中相似参数别名的转换
+        - autowiring：自动装配的拦截器，和spring整合时s2可以使用自动装配的方式来访问spring容器中的Bean
+        - chain：构建一个Action链，使当前Action可以访问前一个Action的属性
+        - conversionError：处理类型转换错误
+        - createSession：创建session对象，用于需要它才能工作的拦截器
+        - debugging：s2使用开发者模式时，该拦截器提供更多的调试
+        - execAndWait：后台执行Action，向用户返送等待页面
+        - exception：处理异常，将异常映射为结果
+        - fileUpload：文件上传，解析文件域
+        - i18n：它吧所选的语言、区域放入Session中
+        - logger：主要输出Action的名字
+        - model-driven：用于模型驱动的拦截器，当某个Action实现ModelDriven接口时，它负责把getModel方法的结果堆入ValueStack中
+        - scoped-model-driven：
+        - params：解析请求参数，赋值给Action对应属性
+        - prepare：Action实现Preparable接口，将会调用它的prepare方法
+        - static-params：它将action的子元素param中的参数传入Action
+        - scope：范围转换拦截器，它可将Action状态信息保存到Session范围内、ServletContext范围内
+        - servlet-config：实现Action直接访问Servlet API
+        - roles：
+        - timer：输出Action的执行时间
+        - token：阻止重复提交
+        - token-session：阻止重复提交，并保存到Session中
+        - validation：通过执行xxxAction-validation.xml中定义的校验器，来完成数据校验
+        - workflow：负责调用Action中的validate方法，校验失败返回input逻辑视图
+        
+# struts-default.xml中的拦截器配置
+    * struts-default.xml是默认配置文件，会自动加载(大部分内建拦截器配置其中，少量配置在s2的插件配置文件中)
+    ! 推荐直接使用系统的defaultStack拦截器栈
+    
+## 使用拦截器完成权限控制
+    > 每当浏览者要执行某个操作时，都应该检查他是否已经登入和具有执行的权限
+# 实现权限控制拦截器
+    * 通过AbstractInterceptor类的intercept方法中的参数调用getInvocationContext方法获得ActionContext来访问Servlet API
+    
+# 配置权限控制拦截器
+    * 多个拦截器组合成栈并设置成默认拦截器
+    * 不想使用默认拦截器中自定义的功能Action定义在其他包中
