@@ -1,2 +1,270 @@
 ----------输入校验----------
 
+>>>
+    * 由于Web应用的开放性导致收集的数据非常复杂(误输入或恶意输入)
+    * 为保证系统正常运行应隔绝恶意输入，通过输入校验完成
+    * 输入校验分为客户端和服务端：它俩缺一不可
+    * 客户端校验：过滤误操作，主要通过JavaScript完成
+    * 服务端校验：阻止非法数据，编程实现
+    * 框架提供校验功能：
+        - 重写validate方法完成校验
+        - 自定义校验器
+<<<
+
+## 输入校验概述
+    > 表现层数据处理涉及两个方面：
+        * 数据类型转化
+        * 数据校验
+        
+# 为什么需要输入校验
+    * 在用户浏览网页时会有各种各样的信息输入，一下情况会导致系统异常：
+        - 用户操作不熟练
+        - 输入错误
+        - 硬件设备的不正常
+        - 网络传输的不稳定
+        - 恶意破坏
+    * 通常遇到异常输入，程序直接返回，给出提示，这种过滤异常输入称为输入校验(数据校验)
+    
+# 客户端校验
+    * 使用JavaScript对输入数据初步过滤
+        - 网页脚本
+        - 支持正则表达式：Java API的Pattern类
+        - Ajax的核心技术
+    ! 为每个表单书写校验代码烦琐，一般借助第三方客户端校验库(Validation.js库)
+    * 阻止误输入与客户端，降低服务器负载
+
+# 服务器端校验
+    * 由于有些高手可以很轻松的绕过客户端校验，所以必须提供服务端的校验工作来保证系统安全
+    * 阻止非法数据进入系统
+    * 对于系统的安全性、完整性，承载着不可替代的作用
+    * 有些输入校验是通过类型转换实现的，所以它俩的关系十分紧密
+    
+# 类型转换和输入校验
+    * 数据无法转换合适类型就不必进行校验了
+    * 类型转换和输入校验同时完成
+    * 类型转换成只是必要条件，必须进行输入校验
+    * 它俩之间的关系：
+        - 类型转换是输入校验的前提
+        - 大部分时同时完成
+        - 数据能正常转换，则校验必须是合法数据
+        
+## 手动完成输入校验
+    * 框架提供的校验
+    
+# 重写validate方法
+    * Action类继承ActionSupport并重写validate方法
+        - 在这个方法中完成输入数据的校验
+        - 类型转换失败也会执行该方法(转换失败的属性值为null或零)
+            * s2提供自动类型转换
+        - 校验失败可以把错误信息添加到ActionSupport的addFieldError方法中，
+          使用<s:fielderror/>标签输出错误信息，专门输出类型转换失败提示，
+          国际资源文件设置xwork.default.invalid.fieldvalue={0}字段无效，输出中文提示
+    ! 类型转换失败，系统不直接返回input逻辑视图，依然调用validate方法
+    * ActionSupport类里包含一个getText方法用来获得国际化信息
+    
+# 重写validateXxx()方法
+    > 当只想对Action中特定的逻辑处理方法进行数据校验的情况下使用这种方式，Xxx代表逻辑处理方法的名字
+    ! 重写validate方法会对Action中的所有逻辑处理方法起作用
+    * validate和validateXxx都会执行，Xxx先执行
+    
+# Struts2 的输入校验流程
+    * 对请求参数进行类型转换
+    * 是否出错：
+        - 是：错误提示保存到ActionContext中，conversionError将其转换成fieldError,执行validate方法
+        - 否：执行validate方法
+    * 是否包含fieldError:
+        - 是：跳过Action处理逻辑，返回input逻辑视图，呈现实际视图，结束
+        - 否：调用Action的处理方法
+        
+## 基本输入校验
+    > 基于验证框架的输入校验
+    > 指定配置文件即可
+    
+# 编写校验规则文件
+    * 校验文件是xml配置文件：放在相关Action路径下
+    * 其中指定Action的属性必须满足的条件
+    * ActionClassName-validation.xml
+        - <validators>
+            <field name="属性名">
+                <field-validator type="requiredstring">：属性的类型
+                    <param name="trim">true</param>
+                    <message>必须输入名字</message>
+                </field-validator>
+                <field-validator type="regex">
+                    <param name="expression"><![CDATA[(\w{4,25})]]></param>
+                    <message>您输入的用户名只能是字母和数组，且长度必须在4到25之间</message>
+                </field-validator>
+            </field>
+            <field name="属性名">
+                <field-validator type="int"> 属性的类型
+                    <param name="min">1</param>
+                    <param name="max">150</param>
+                    <message>年纪必须在1到150之间</message>
+                </field-validator>
+            </field>
+            <field name="属性名">
+                <field-validator type="date"> 属性的类型
+                    <param name="min">1900-01-01</param>
+                    <param name="max">2050-02-21</param>
+                    <message>年纪必须在${min}到${max}之间</message>
+                </field-validator>
+            </field>   
+         </validators>
+         
+    * 每个Action都有一个校验文件
+    * 系统自动加载该文件
+    
+# 国际化提示信息
+    * 在国际化文件中指定提示信息的Entry，校验文件中的<message key="xxx"/>标签通过key来引用提示信息
+    
+# 使用客户端校验
+    * 用Struts2标签生成表单，增加表单属性validate="true"即可
+    * 以上方式如果在校验文件中以<message key="xxx"/>的方式定义提示信息将会出现异常
+        - 使用<message>${getText("key")}</message>的方式输出国际化资源文件中的信息
+            * ActionSupport.getText()
+    ! 客户端校验基于JavaScript，JS本身的限制影响有些服务端校验不能转换成客户端校验
+    * 客户端校验支持的校验器：
+        - required validator：必填校验器
+        - requiredstring validator：必填字符串校验器
+        - stringlength validator：字符串长度校验器
+        - regex validator：表达式校验器
+        - email validator：邮件校验器
+        - url validator：网址校验器
+        - int validator：整数校验器
+        - double validator：双精度校验器
+        ! 注意：
+            * <s:form.../>元素有一个theme属性，不要将该属性指定为simple
+            * 校验规则文件不能使用key指定国际化提示信息
+            
+# 校验文件的搜索规则
+    * 为Action中的不同处理方法配置不同的校验规则
+        * ActionClassName-ActionName-validation.xml
+        <field name="name">
+            <field-validator type="fieldexpression">
+                <param name="expression"><![CDATA[(user == pass)]]></param>
+                <message>${getText("key")}</message>
+            </field-validator>
+        </field>
+    ! ActionClassName-validation.xml中的规则依然会作用在该Action的所有处理方法
+    * 当两个Action，其中一个继承了另一个，它们都配置了相应的校验文件，系统搜索校验文件的顺序：
+        - 父Action-validation.xml
+        - 父Action-别名-validation.xml
+        - 子Action-validation.xml
+        - 子Action-别名-validation.xml
+        ！不管有没有，是否找到，系统总是按固定顺序搜索
+        * 规则是叠加的
+        >>>
+            从上而下搜索规则文件，应用的校验规则是所有规则的总和，如果两个校验文件冲突，使用后面的
+        <<<
+        
+## 校验器的配置风格
+    > xwork-validator-1.0.2.dtd
+    * 两种风格：
+        - 字段校验器风格：字段优先
+        - 非字段校验器风格
+    * 组织校验规则的方式不同
+    
+# 字段校验器配置风格
+    * 以<field.../>元素定义规则。
+    * <field name="被校验的字段">:可以在field元素中定义多个
+        <field-validator type="校验器名">
+            <param name="参数名">参数值</>
+            <message.../>
+            
+# 非字段校验器风格
+    * 以<validator.../>元素定义规则
+        <validator type="校验器名">
+            <param name="fieldName">被校验字段</>
+            <param name="参数名">参数值</>
+            <message key.../>
+            
+# 短路校验器
+    * <validator>和<field-validator>有个一个可选属性short-circuit属性
+        - 指定该校验器是否是短路校验器，默认值false
+        - 为一个字段指定了多个校验器，第一个校验器失败了，接下来的校验器不会执行
+    ! 客户端校验不支持短路
+    
+# 校验顺序和短路
+    * 由于短路的特性，前面执行的校验器会阻止后面的执行
+    * 校验器的执行顺序的原则：
+        - 非字段优先字段的校验器
+        - 按顺序执行
+    * 短路的原则：
+        - 非字段最优先，如果失败，该字段的所有校验器不会执行
+        - 非字段校验失败，不影响其它非字段校验器
+        - 字段校验失败，之后的字段校验器不执行
+        - 字段校验器永远不会阻止非字段校验器
+    ! 校验规则复杂的情况：
+        * 开发自己的校验器
+        * 重写Action的validate方法
+        
+## 内建校验器
+
+# 注册校验器
+    * 默认校验器注册文件
+        * com.opensymphony.xwork2\validator\validators\default.xml
+    * 自定义校验器注册方式在WEB-INF/classes路径下添加validators.xml文件
+        - 由<validator>元素组成，每一个代表一个校验器
+    ! 如果提供了自己的校验器，默认的校验将不会加载，需要把默认中的校验器复制到自定义校验器的注册文件中(validators.xml)
+    
+# 必填校验器
+    * 名字是required，要求字段不能为空
+    
+# 必填字符串校验器
+    * 名字是requiredstring，要求字段不能为空，不能是空字符串""
+    * 参数trim：去掉字段前后空白，默认true
+  
+# 整数校验器
+    * 名字是int，要求字段值必须在指定范围内
+    * 参数min：指定字段最小值，可选
+    * 参数max：指定字段最大值，可选
+    
+# 日期校验器
+    * 名字是date，要求字段值必须在指定范围内
+    * min
+    * max
+    ! 如果系统没有指定日期转换器，默认使用XWorkBasicConverter；
+      进行日期转换时，默认使用struts.properties中指定的Locale或系统默认的Locale的Date.SHORT格式
+    
+# 表达式校验器
+    * 名字是expression,非字段校验器，不可用在字段风格配置中，要求OGNL表达式返回true(通过)，否则失败
+    * 参数expression：指定一个逻辑表达式，该表达式基于ValueStack进行求值，返回boolean值，true通过，否者失败
+    
+# 字段表达式校验器
+    * 名字是fieldexpression，要求字段满足一个逻辑表达式
+    * 参数expression：指定一个逻辑表达式，该表达式基于ValueStack进行求值，返回boolean值，true通过，否者失败
+    
+# 邮件地址校验器
+    * 名字是email，要求字段如果非空，必须是合法邮件地址，基于正则进行校验
+    ! 该校验器覆盖面可能不够，建议使用正则表达式校验器
+    
+# 网址校验器
+    * 名字是url，要求字段如果非空，则必须是合法的URL地址，基于正则
+    ! 建议使用正则表达式校验器
+
+# Visitor校验器
+    * 检测Action里的复合属性
+        <field name="复合属性名">
+            <field-validator type="visitor">
+                <param name="context">userContext</param>
+                <param name="appendPrefix">true</param>：如果为true输出错误信息的时候加入前缀
+                <message>提示信息前缀：</message>
+            </field-validator>
+        </field>
+    * 为复合属性类指定校验文件
+        类名-context参数值-validation.xml
+        
+# 转换校验器
+    * 名字是conversion，检查被校验字段在类型转换过程中是否出现错误
+    * repopulateField：当类型转换失败后，返回input页面，出错的表达域是否保留原来的错误输入
+    
+# 字符串长度校验器
+    * 名字是stringlength，字段长度必须在指定范围内
+    * 参数maxLength：指定最大长度，可选
+    * 参数minLength：指定最小长度，可选
+    * 参数trim：校验之前是否取出字段前后空白，可选
+    
+# 正则表达式校验器
+    * 名字是regex，检查字段是否匹配一个正则表达式
+    * 参数expression：必须有，指定正则
+    * 参数caseSensitive：匹配时是否区分大小写，可选，默认true
