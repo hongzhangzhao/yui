@@ -1,2 +1,22 @@
-﻿* 
+﻿------------------
+
+* Action类不需要继承和实现类和接口，和普通JavaBean差不多，
+* 唯一的差别多了一个execute()方法,
+* 没有和Servlet API耦合也没和Struts API耦合，
+* Action的属性值是怎么初始化的？
+    - 通过拦截器机制，解析请求并初始化Action
 	
+* Action需要配置在struts.xml文件中在能处理请求，该文件在classpath下
+
+* Action类可以实现Action接口，其中预订了一些逻辑视图常量
+
+* ActionContext类可以访问Servlet API
+
+* Action属性可以封装请求也可封装其它信息，它们都将被封装在ValueStack对象中
+
+* 控制器中不宜直接new业务逻辑组件实例，通过工厂模式或依赖注入创建实例
+
+* 当Action设置了某个属性，Struts2将这些属性全部封装在一个叫做struts.valueStack的请求属性中
+
+* ValueStack vs = (ValueStack)request.getAttribute("struts.valieStack");
+  vs.findValue("Action属性");
