@@ -1,0 +1,153 @@
+---------- Struts2的国际化 ----------
+
+>>>
+    
+<<<
+
+## 程序国际化简介
+    * 当对客户端的请求做出响应时，根据用户电脑操作系统的语言环境呈现对应语言的内容
+        - 校验提示
+        - 类型转换提示
+        - 帮助
+        - Action信息
+        - JSP页面信息
+        
+# 程序国际化的意义
+    * 全球化的Internet需要全球化的软件
+    
+# Java国际化的思路
+    * 将信息(各个语种)包装在资源文件中(不同语种都有独自的对应文件)，key=value的形式
+        - key不变，value根据语种的不同而变化
+        - 文件命名规则：
+            * baseName(自定义)_language_country.properties
+            * baseName_language.properties
+            * baseName.properties
+        ! 资源文件中包含非西欧字符需要 [native2ascii 资源源文件 目的源文件] 处理一下
+            - IDE自动处理
+    * Java程序国际化：
+        - java.util.ResourceBundle：加载一个资源包
+        - java.util.Locale：对应一个特定的国家/区域、语言环境
+        - java.text.MessageFormat：将消息格式化
+    
+# Java支持的语言和国家
+    * Locale[] localeList = Locale.getAvailableLocales();
+        - 数组中包含Java支持的所有语言和国家
+        - Locale.getDisplayCountry()和Locale.getCountry()
+        - Locale.getDisplayLanguage()和Locale.getLanguage()
+        ! 有相关资料可以查阅
+        
+# 完成程序国际化
+    Locale ll = Locale.getDefault();
+    ResourceBundle bundle = ResourceBundle.getBundle("baseName", ll);
+        - 加载baseName系列文件，具体加载哪个取决于ll
+    bundle.getString("key");
+    ! 控制面板中可以设置语言环境
+
+# 带占位符的消息
+    * 资源文件中的value有些部分是在程序中动态获得，使用{0-n}作为占位符(可以有多个)
+    * String ks = bundle.getString("key");
+      MessageFormat.format(ks, 填充占位符 , , ,);
+    ！ 找不到对应的资源文件怎办？
+        * baseName(自定义)_language_country.properties
+        * baseName_language.properties
+        * baseName.properties
+        * 按以上顺序搜索，都没有抛异常
+
+# 使用类文件代替资源文件
+    * 类的命名规则
+        - baseName_language_country
+    * 必须继承ListResourceBunlde，重写getContents方法，返回Object[][]数组
+        - 其中每一项都包含一个{key,value}
+    * 搜索顺序：类文件覆盖资源文件
+        * baseName_language_country.class
+        * baseName_language_country.properties
+        * baseName_language.class
+        * baseName_language.properties
+        * baseName.class
+        * baseName.properties
+
+## Struts2的国际化入门
+    * 基于Java国际化，进一步封装，简化应用程序的国际化
+
+# Struts2中加载全局资源文件
+    * struts.xml或struts.properties配置常量
+        - struts.custom.i18n.resource=baseName
+        - <constant name="struts.custom.i18n.resources" value="baseName" />
+    * s2应用可以在所有地方取出信息，包括JSP和Action
+
+# 访问国际化消息
+    * 三种方式：
+        * JSP页面使用<s:text name="key" />
+        * Action中通过ActionSupport类的getText(String key)方法
+        * 表单域使用key属性(Label)：<s:textfield name="password" key="key"/>
+
+# 输出带占位符的国际化消息
+    * 填充占位符的两种方式：
+        - JSP页面中填充
+          <s:text name="key">
+			<s:param><s:property value="可以是Action属性"/></s:param>：代表一个占位符，可以有多个，上下顺序(0-n)
+			......
+		  </s:text>
+          
+        - Action中填充
+            * getText(String aTextName, List args)或getText(String key, String[] args)
+            * 数组或List中的元素按顺序填充占位符
+            
+    * 占位符的替代方式：
+        * 在资源文件中使用表达式替换占位符：key=[{0}=${Action属性(ValueStack中获取)}]
+
+## 加载资源文件的方式
+    * 全局加载
+    * 包范围
+    * 类范围
+    * 临时指定
+
+# 包范围资源文件
+    * 在包的根路径下建立baseName=package系列资源文件
+    * 该包下的所有Action都可访问
+
+# Action范围资源文件
+    * 在Action所在路径下建立baseName=ActionName系列资源文件
+    * 只有该Action可以访问
+    * 在不同Action里使用相同的key来表示不同的字符串值
+
+# 临时指定资源文件
+    * classpath下建立baseName=tmp系列资源文件
+    <s:i18n name="baseName">：使用这个标签临时指定输出信息的国际化资源文件
+        <s:form action="">
+            <s:textfield name="xxx" key="key"/>
+        或
+        <s:text name="key"/>
+    </s:i18n>
+
+# 加载资源文件的顺序
+    > Action访问资源文件的加载顺序:
+        * @Action范围
+        * 以上没有，在父类所在的Action范围找
+        * 以上没有，在实现的接口的Action范围找
+        * 以上没有，如果@实现了ModelDriven,对于getModel()方法返回的model对象，重新执行第@步
+        * 以上没有，在包范围找
+        * 以上没有，上溯包范围找
+        * 以上没有，全局找
+        * 以上没有，输出key的字符串值
+        * 以上某步骤找到了，停止找，输出信息
+    > JSP访问加载顺序:分两种
+        1 <s:i18n>
+        1 以上没有，全局找
+        1 以上没有，输出key的字符串值，如果以上某步找到了，不往下找了，直接输出
+        
+        2 没使用<s:i18n>标签，全局找，找没找到跟1的处理方式一样
+    
+## 允许用户自行选择程序语言
+    
+
+# Struts国际化的运行机制
+    * 设置用户默认语言：ActionContext.getContext().setLocale(Locale arg)
+    * i18n拦截器自动设置默认语言：
+        - struts-default.xml中定义
+        - 在Action方法执行前，自动查找请求中名为request_locale的参数，
+          如果存在，拦截器将其作为参数，转换成Locale对象，并设为用户默认的Locale，
+          和保存在Session名为"WW_TRANS_I18N_LOCALE"的属性中
+
+# 创建下拉列表框
+    * 这里涉及许多标签，先略过看标签
