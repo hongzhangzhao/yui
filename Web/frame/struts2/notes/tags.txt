@@ -8,91 +8,288 @@
 
 
 # 标签的优势
-
+  
 
 # 标签分类
-
-
+    * s2标签不依赖任何表现层技术(大部分标签可在各种表现层技术中使用)
+        - JSP
+        - Velocity
+        - FreeMarker
+        ! 少数标签会有限制
+    * s2标签都定义在RUI为[ /struts-tags ]命名空间下
+        - 简单分类：
+            * UI标签：生成HTML元素
+                - 表单标签：生成form元素，以及普通表单元素
+                - 非标点标签：生成页面上的树、Tab也等标签
+            * 非UI标签：
+                - 流程控制标签：分支，循环等流程控制
+                - 数据访问标签：输出ValueStack中的值，完成国际化
+            * Ajax标签：
+    * s2默认支持OGNL, JSTL, Groovy ,Velcity表达式
+    
 ## 标签初步
-
+    * 避免在视图层嵌套Java脚本，提高维护性
 
 # 使用Struts2标签库的准备
-
+    * 标签库开发的两个步骤：
+        * 自定义标签的标签处理类和标签库定义文件都由s2提供
+            - s2核心包中\META-INF\struts-tags.tld是定义文件
+    * 使用步骤：
+        * web.xml中增加标签库的定义：使用Servlet2.4以上规范可以省略，不省略提高兼容性
+            <taglib>
+                <taglib-uri>/struts-tags</>：可以随意定义，但是最后使用默认的
+                <tablib-location>/WEB-INF/lib/struts2-core-xxx.jar</>
+            </taglib>
+        * JSP页面中使用<%@taglib prefix="s" uri="/struts-tags"%>指令
 
 # Struts2的OGNL
-
-
+    * s2的StackContext需要多个“根”对象，ValueStack是多个根对象的其中之一
+    * 根对象可以直接访问属性，普通对象要在前面加个“#”
+    * 在s2中，系统的ValueStack是OGNL表达式的第一个跟对象，如果最近的Action存在，则Action上下文是第二个根对象
+    * s2不只根据表达式从ValueStack中取对象，还可以直接从对象中获取属性
+    * s2提供一个特殊的OGNL PropertyAccessor(属性访问器)，它可自动搜索栈内所有实体(从上到下)，直到找到与求值表达式匹配的属性
+        - 直接访问属性
+        - 索引访问
+            * [ 0 ].xxx，不是直接获取，而是从指定索引开始搜索
+    * OGNL处理的顶级对象是一个Context，它是一个Map类型实例，里面有个根元素是ValueStack
+    * 命名对象：访问需要前面加"#"：[ StackContext ]
+        - parameters：访问请求参数
+            * #parameters['xxx']或#parameters.xxx
+        - requeset
+        - session
+        - application
+        - attr：访问PageContext,如果没有按Request，session，ServletContext顺序搜索其中属性
+        ! Action实例一旦创建就放到ValueStack中了，所以访问属性不用加"#"
+        
+    
 # OGNL中的集合操作
-
+    * {0,1,2,3,4}生成List集合
+    * #{k1:v1,k2:v2,...}生成Map集合
+    * in和not in元素符，分别判断某个元素是否在一个或者不在一个集合中
+        - <s:if test="'xxx' in {'xxx','yyy'}">
+        - <s:if test="'xxx' not in {'xxx','yyy'}">
+    * 获取子集
+        - ?：取出所有符合的元素
+        - ^：取出符合的第一个元素
+        - $：取出符合的最后一个元素
+        xxx.yyy.{? #this.xxx == 'yyy'}
 
 # lambda表达式
-
+    * 通过Lambda在OGNL中使用函数
 
 ## 控制标签
-
+    * 控制ValueStack
+    * 数据标签用于访问ValueStack中的数据
+    * 控制标签：合并集合和排序
+        - if
+        - elseIf/elseif
+        - else
+        - append：合并集合成一个新集合
+        - generator：字符串解析器，把一个字符串解析成一个集合
+        - interator
+        - merge：合并集合，与append的拼接方式有所不同
+        - sort
+        - subset
 
 # if/elseif/else标签
-
+    <s:if test="表达式">
+    * 还可以指定一个id属性，没太大意义
 
 # iterator标签
+    * <s:iterator value="" var="" status="" />
+    - value:可选，指定集合(使用NGOL)，没有指定该属性，使用ValueStack栈顶集合
+    - var:可选属性，指定集合中元素的ID
+    - status:可选属性，指定迭代时的IteratorStatus实例，通过该实例可判断当前迭代元素的属性：
+        * 是否是最后一个
+        * 元素的索引
+        * IteratorStatus包含的方法：
+            - int getCount: 当前迭代了几个元素
+            - int getIndex：当前迭代元素的索引
+            - boolean isEven：当前被迭代元素的索引是否是偶数
+            - boolean isFirst：当前被迭代的元素是否是第一个元素
+            - boolean isLast：当前被迭代的元素是否是最后一个元素
+            - boolean isOdd：当前被迭代元素的索引是否是奇数
 
 
 # append标签
-
-
+    * 合并多个集合，统一迭代
+    * <s:append var="xxx"/>
+        - var属性：新集合的名字
+        - 包含多个<s:param value="{x,y,z}"/>子元素，每个代表一个集合
+    * 可以拼接Map，也可Map和List拼接
+    
 # generator标签
-
+    * 将一个字符串以指定的分隔符，拆分成多个子串(临时集合)，放入ValueStack顶部，标签结束就移除
+    * 属性：
+        - count：可选，指定生成的集合中元素的总数
+        - separator：必填，指定分隔符
+        - val：必填，指定字符串
+        - converter：可选，指定一个转换器，将集合中的字符串转换成对象
+        - var：可选，将集合放在pageContext中
 
 # merge标签
-
+    * 类似append，拼接方式不同
+    * 假设有三个集合，包含三个元素：
+        * append: 123123123
+        * merge: 112233
 
 # subset标签
-
+    * 获取集合子集，底层通过org.apache.Struts2.util.SubsetIteratorFilter类提供实现
+    * 属性：
+        - count：可选，指定元素个数，不指定获取全部
+        - source：可选，指定源集合，不指定将获取ValueStack栈顶元素
+        - start：可选，指定从第几个元素开始截取，默认从0开始
+        - decider：可选，由开发者决定是否选中该元素
+    ! 生成的子集放在ValueStack的栈顶，标签结束，移除ValueStack
+    * 开发者决定截取标准：
+        - 需自定义Decider类并实现SubsetIteratorFilter.Decider接口：
+            * 重写public boolean decide(Object element) throws Exception
+            * 返回真表示该元素选入子集中
+            * 在JSP页面使用该类的实例过滤集合
 
 # sort标签
-
+    * 对集合中元素排序，必须提供子集的排序规则
+    * 自定义类实现Comparator接口，重写public int compare(Object one, Object two)
+        - 返回零不改变位置
+    * 属性：
+        - comparator：必填，指定Comparator实例
+        - source：可选，指定集合，默认ValueStack栈顶集合
+    * 集合放在ValueStack中，标签结束，移除ValueStack
 
 ## 数据标签
-
+    * 访问数据(Action属性)
+    * 国际化输出
+    * 主要标签：
+        - action
+        - bean
+        - date
+        - debug
+        - i18n
+        - include
+        - param
+        - push
+        - set
+        - text
+        - url
+        - property
 
 # action标签
-
-
+    * 可以在JSP页面直接调用Action
+    * 属性：
+        - var：作为Action的引用
+        - name：必填，指定该标签调用哪个Action
+        - namespace：可选，指定Action所在的namespace
+        - executeResult：可选，是否包含Action处理结果的页面，默认false
+        - ignoreContextParams：可选，指定该页面的请求参数是否传入Action，默认false
+    
 # bean标签
-
+    * 创建JavaBean实例，<param.../>元素给属性赋值，必须提供setter方法，访问属性必须提供getter方法
+    * 属性：
+        - name：必填，指定类
+        - var: 可选，指定Bean实例放入StackContext中，直接通过var属性访问JavaBean实例
+    ! 标签内JavaBean在ValueStack栈顶，标签结束被移除，除非指定了var属性，否则将不能访问
 
 # date标签
-
+    * 格式化输出日期
+    * 计算指定日期和当前时刻的时差
+    * 属性：
+        - format：可选，设置日期格式
+        - nice：可选，true或false，是否输出时差，默认false
+        - name：必填，指定日期值
+        - var: 引用
+    ! nice=true和format都指定的情况下，format将失效，
+      如果两者都没指定：系统将会到国际化资源文件中找key为struts.date.format的格式，否则：
+      默认采用DateFormat.MEDIUM格式
+    * struts.date.format=yyyy年MM月dd日
 
 # debug标签
-
-
+    * 辅助调试
+    * 在页面生成超链接，查看ValueStack和StackContext中所有的值信息
+    * <s:debug />
+    
 # include标签
-
+    * 将JSP和Servlet包含到本页面
+    * 属性：
+        - value：必填，指定要包含的页面
+        - var：指定该标签的引用
+        <s:include value="xxx.jsp">
+            <s:param name="aaa" value="'vvv'"/>：向被包含页面传递参数
+        </s:include>
+    * 在当前页面同一个JSP或Servlet可以被包含多次
 
 # param标签
-
-
+    * 为其它标签提供参数，如include标签，bean标签
+    * 属性：
+        - name: 可选，参数名
+        - value：可选，参数值
+        - var: 可选，该元素引用
+    ! name属性可选，提供name要有setter方法，否则外层标签必须实现UnnamedParametric接口(如TextTag)
+    * 两种写法:
+        * String s = "abc"
+        - <param name="" value="s" />
+        - <param name=""> value </param>
+        - value参数要指定字符串值要加单引号value="'abc'"
+        
 # push标签
-
+    * 将某个值放到ValueStack栈顶
+    * 属性：
+        - value: 必填，指定要放到栈顶的值
+        - var: 可选，引用
 
 # set标签
-
+    * 将某个值放入指定范围内，如：appliaction, session等
+    * 当要访问的参数在对象图中过深，可以把它设置成新值保存在特定范围内来访问
+        - 类似声明一个新变量，初始化它，并把变量放到指定范围内
+    * 属性：
+        - var：必填，新变量名
+        - scope：可选，把变量放到那个范围内(application,session,request,page,action),没有指定默认放在StackContext中
+        - value：可选，赋给变量的值，如果没有指定将ValueStack栈顶值赋给变量
+        - var：可选，该元素的引用ID
+    
 
 # url标签
-
+    * 生成一个url地址
+    * param子元素给生成的地址传参数
+    * 属性：
+        - includeParams：可选，是否包含请求参数，取值：none, get, all
+        - scheme：可选，用于设置scheme属性
+        - value：可选，指定URL地址值，如果不指定使用action属性指定的Action作为URL
+        - action：可选，Action作为URL，不提供这个属性，将由value属性的值作为URL
+        - namespase：可选，指定命名空间
+        - method：可选，指定Action处理方法
+        - encode: 可选，编码请求参数
+        - includeContext：可选，包含上下文对象
+        - anchor：可选，指定URL的锚点
+        - var：引用
+    ! value和action都没指定使用当前也面的URL
 
 # property标签
+    * 输出指定值
+    * 属性：
+        - default：指定属性值为null的情况下显示的值
+        - escape：指定是否escape HTML代码
+        - value：指定需要输出的属性值，没有指定则输出ValueStack栈顶的值
+        - var：指定该元素的标识
 
 
 ## 主题和模板
-
+    
 
 # 选择主题
-
-
+    * 设置主题的方法：
+        - 设定特定UI标签上的theme属性
+        - 设定特定UI标签外围的Form标签的theme属性
+        - 取得page会话范围内以theme为名称的属性
+        - ....request.....
+        - ....session.....      
+        - ....application.....
+        - 取得名为struts.ui.theme的常量(默认值是xhtml)来确定主题，
+            ! 该常量可以在struts.properties和struts.xml文件中确定
+        * 以上设置主题有优先级，上面的会覆盖下面的
+    * 可在一个视图页面中使用几种不同的主题
+    
 # 创建自定义主题
-
+    
 
 # struts2内建主题
 
