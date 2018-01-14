@@ -4,19 +4,51 @@
 * 唯一的差别多了一个execute()方法,
 * 没有和Servlet API耦合也没和Struts API耦合，
 * Action的属性值是怎么初始化的？
-    - 通过拦截器机制，解析请求并初始化Action
+    - 通过拦截器机制，解析请求并初始化Action的对应属性
 	
-* Action需要配置在struts.xml文件中在能处理请求，该文件在classpath下
+* Action需要配置在struts.xml文件中才能处理请求，该文件在classpath下
+    - 定义处理结果和资源之间的映射
 
 * Action类可以实现Action接口，其中预订了一些逻辑视图常量
+    - SUCCESS
+    - NONE
+    - ERROR
+    - INPUT
+    - LOGIN
 
 * ActionContext类可以访问Servlet API
 
-* Action属性可以封装请求也可封装其它信息，它们都将被封装在ValueStack对象中
+* Action属性可以封装请求也可封装需要传入下个页面的对象，它们都将被封装在ValueStack对象中
+    >
+        private List books;
+        getter
+        setter
+        public String execute(){
+            setter(new Books()); //该对象的创建应该利用工厂模式或依赖注入
+            return SUCCESS;
+        }
+    <
+    * 控制器中不宜直接new业务逻辑组件实例，通过工厂模式或依赖注入创建实例
 
-* 控制器中不宜直接new业务逻辑组件实例，通过工厂模式或依赖注入创建实例
+** 当Action设置了某个属性，Struts2将这些属性全部封装在一个叫做struts.valueStack的请求属性中
+    * ValueStack(map) vs = (ValueStack)Request.getAttribute("struts.valueStack");
+        - 使用OGNL访问该对象中的全部信息
+        - 该对象类似map,但比map更强大
+            * 该对象根据表达式查询值
+            * Action的属性是该对象的value名
+            Type object = (object)vs.findValue("Action属性名")
+    * Action把请求参数封装在一个ValueStack的对象中，并保存在请求对象中，可以使用OGNL直接访问其中的信息
+    ! JSP页面通过getAttributeNames分析请求中的全部属性
+        
 
-* 当Action设置了某个属性，Struts2将这些属性全部封装在一个叫做struts.valueStack的请求属性中
-
-* ValueStack vs = (ValueStack)request.getAttribute("struts.valieStack");
-  vs.findValue("Action属性");
+* 国际化
+    * 加载资源文件
+        * Struts.custom.i18n.resources=baseName //struts.properties(classes下)
+    * 输出
+        * <s:text name="key" />
+        * <s:property value="%{getText("key")}" />
+        
+* 数据校验
+    * 继承ActionSupport
+        - 它是工具类，它实现了Action接口和Validateable接口(数据校验)
+  
