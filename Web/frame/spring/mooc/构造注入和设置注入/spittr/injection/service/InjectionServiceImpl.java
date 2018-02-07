@@ -5,6 +5,7 @@ public class InjectionServiceImpl implements InjectionService {
     private InjectionDAO injectionDAO;
 
     // 构造器注入
+    // 参数的名字要和配置文件中name属性定义的一样
     // public InjectionServiceImpl(InjectionDAO injectionDAO) {
     // this.injectionDAO = injectionDAO;
     // }
