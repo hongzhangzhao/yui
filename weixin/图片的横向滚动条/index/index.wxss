@@ -1,0 +1,93 @@
+/**index.wxss**/
+
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
+
+.order{
+  font-size: 12px;
+}
+
+.blank{
+  background-color: #eee;
+  height: 8px;
+}
+/*
+  start
+*/
+.order_time{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #eee;
+  padding: 10px 10px;
+}
+
+.product_list{
+  width: 100%;
+  font-size: 12px;
+  border-bottom: 1rpx solid #e5e5e5;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 85rpx;
+  vertical-align: middle;
+  text-align: center;
+}
+
+.product_item{
+  margin-left: 5px;
+  display: inline-block;
+  margin-top: 7px;
+}
+
+.product_image{
+  border: 1px solid #e5e5e5;
+  width: 55px;
+  height: 55px;
+}
+
+.order_status{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  padding: 5px 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.status_icon{
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.status_icon_size{
+  height: 22px;
+  width: 22px;
+  padding-right: 22px;
+}
+
+.price_font{
+  color: #ff4081;
+  font-size: 40rpx;
+}

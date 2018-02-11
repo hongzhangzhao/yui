@@ -1,0 +1,59 @@
+<!--index.wxml-->
+
+<view>
+
+  <view class='order'wx:for='{{orders}}' wx:key='id'>
+
+    <view class='blank'></view>
+
+    <view class='order_time'>
+      <view>{{item.time}}</view>
+      <view style='color: #ff4081;font-size:35rpx'>
+        定时送达
+        <!-- <image class='order_time_icon' src='../../images/timing.png'></image> -->
+      </view>
+    </view>
+
+    <scroll-view class='product_list' scroll-x scroll-with-animation>
+      <view class='product_item' wx:for='item.img'>
+        <image class='product_image' src='../../images/001.jpg'></image>
+      </view>
+    </scroll-view>
+
+
+    <view class='order_status'>
+      <view class='status_icon'>
+        <view>
+          <view>
+            <image class='status_icon_size' src='../../images/submit.png'></image>
+          </view>
+          <view>提交</view>
+        </view>
+        <view wx:if='{{item.status >= 2 && item.status <= 4}}'>
+          <view>
+            <image class='status_icon_size' src='../../images/pay.png'></image>
+          </view>
+          <view>支付</view>
+        </view>
+        <view wx:if='{{item.status >= 3 && item.status <= 4}}'>
+          <view>
+            <image class='status_icon_size' src='../../images/ship.png'></image>
+          </view>
+          <view>配送</view>
+        </view>
+        <view  wx:if='{{item.status == 4}}'>
+          <view>
+            <image class='status_icon_size' src='../../images/sign.png'></image>
+          </view>
+          <view>签收</view>
+        </view>
+      </view>
+      <view class='price_font'>{{item.price}}</view>
+    </view>
+    <view style='padding:20px'></view>
+
+    <view class='blank'></view>
+
+  </view>
+
+</view>
