@@ -1,0 +1,24 @@
+<!--index.wxml-->
+<!-- <view class="container">
+  <view class="userinfo">
+    <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称 </button>
+    <block wx:else>
+      <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" background-size="cover"></image>
+      <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+    </block>
+  </view>
+  <view class="usermotto">
+    <text class="user-motto">{{motto}}</text>
+  </view>
+</view> -->
+<view class="xxx">
+
+<scroll-view class='meal_item_list' scroll-x scroll-with-animation>
+
+  <view wx:for='{{list}}' wx:key='id' bindtap='selectMeal' data-index='{{index}}' data-id='{{item.id}}' class="{{curMeal===index ? 'selected_meal' : 'meal_item'}}">
+    {{item.name}}
+  </view>
+
+</scroll-view>
+
+</view>

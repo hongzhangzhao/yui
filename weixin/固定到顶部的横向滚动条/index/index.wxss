@@ -1,0 +1,62 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+ .usermotto {
+  margin-top: 200px;
+} 
+/*
+  scroll-view使用的样式
+*/
+.meal_item_list {
+  width: 100%;
+  font-size: 12px;
+  border-bottom: 1rpx solid #e5e5e5;
+  display: inline-block;
+  white-space: nowrap;
+  line-height: 85rpx;
+  vertical-align: middle; 
+  text-align: center; 
+  position: fixed;
+  z-index: 999;
+  background-color: white;
+}
+/*
+  滚动view的样式，有选中效果
+*/
+.selected_meal {
+   margin-left: 30px; 
+  color: #1aae18;
+  border-bottom: 5rpx solid #1aae18;
+  display: inline-block;
+}
+/*
+  滚动view,未选中状态,
+  view是块级元素不能并排显示,所以要使用inline-block
+*/
+.meal_item {
+  margin-left: 30px;
+  display: inline-block;
+}
+/*
+  由于滚动条是固定在顶部,这样会覆盖掉下面显示的内容，
+  所以在滚动条的上一级view设置下高度
+*/
+.xxx{
+  width: 750rpx;
+  height: 100rpx;
+}
