@@ -1,0 +1,76 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+ .usermotto {
+  margin-top: 200px;
+} 
+/*
+  没什么好说的
+*/
+.product_row{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 50rpx 10rpx;
+  border-bottom: 1px solid #eeeeee;
+}
+/*
+  这个样式定义在imag标签上，
+  由于上一级别元素view定义了宽度，
+  图片的100%再大也要被限制
+*/
+.picture{
+  width: 100%;
+}
+
+.product_detail{
+  display: flex;
+  flex-direction: column;
+  font-size: 30rpx;
+  justify-content: space-between;
+}
+
+.product_title{
+  font-size: 14px;
+  /*
+    加粗文字,
+    选择字体
+  */
+  font-weight: bold;
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.product_desc{
+  color: #9e9e9e;
+  font-size: 12px;
+}
+
+.product_tag{
+  font-size: 9px;
+  color: #e0e0e0;
+  /*
+    加了一个相框
+  */
+  border: 1px solid #e0e0e0;
+}
+
+.price{
+  padding-top: 70rpx;
+  color: #ff4081;
+}

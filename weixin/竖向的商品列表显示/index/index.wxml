@@ -1,0 +1,74 @@
+<!--index.wxml-->
+
+<scroll-view scroll-y="true" bindscrolltolower="loadMore" bindscrolltoupper="refresh">
+
+  <view class="product_row">
+    <view style='width:40%'>
+      <image class="picture" src='../../images/001.jpg' mode="widthFix"></image>
+    </view>
+    <view class="product_detail">
+      <view class='product_title'>红黄小番茄组合500g</view>
+      <view class='product_desc'>你是我的什么红黄小番茄呀</view>
+      <view>
+        <span class='product_tag'>100%品控全检</span>
+      </view>
+      <view class='price'>￥14.9</view>
+    </view>
+    <view style='width:12%'>
+      <image class="picture cart" src='../../images/004.png' mode='widthFix'></image>
+    </view>
+  </view>
+
+  <view class="product_row">
+    <view style='width:40%'>
+      <image class="picture" src='../../images/001.jpg' mode="widthFix"></image>
+    </view>
+    <view class="product_detail">
+      <view class='product_title'>红黄小番茄组合500g</view>
+      <view class='product_desc'>你是我的什么红黄小番茄呀</view>
+      <view>
+        <span class='product_tag'>100%品控全检</span>
+      </view>
+      <view class='price'>￥14.9</view>
+    </view>
+    <view style='width:12%'>
+      <image class="picture cart" src='../../images/004.png' mode='widthFix'></image>
+    </view>
+  </view>
+
+  <view class="product_row">
+    <view style='width:40%'>
+      <image class="picture" src='../../images/001.jpg' mode="widthFix"></image>
+    </view>
+    <view class="product_detail">
+      <view class='product_title'>红黄小番茄组合500g</view>
+      <view class='product_desc'>你是我的什么红黄小番茄呀</view>
+      <view>
+        <span class='product_tag'>100%品控全检</span>
+      </view>
+      <view class='price'>￥14.9</view>
+    </view>
+    <view style='width:12%'>
+      <image class="picture cart" src='../../images/004.png' mode='widthFix'></image>
+    </view>
+  </view>
+
+  <view class="product_row">
+    <view style='width:40%'>
+      <image class="picture" src='../../images/001.jpg' mode="widthFix"></image>
+    </view>
+    <view class="product_detail">
+      <view class='product_title'>红黄小番茄组合500g</view>
+      <view class='product_desc'>你是我的什么红黄小番茄呀</view>
+      <view>
+        <span class='product_tag'>100%品控全检</span>
+      </view>
+      <view class='price'>￥14.9</view>
+    </view>
+    <view style='width:12%'>
+      <image class="picture cart" src='../../images/004.png' mode='widthFix'></image>
+    </view>
+  </view>
+
+
+</scroll-view>
