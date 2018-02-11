@@ -1,0 +1,80 @@
+/**index.wxss**/
+
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
+
+/*
+
+*/
+
+.pay_box {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  /* z-index: 999; */
+}
+
+/*
+  固定，可以定位
+*/
+
+.fixed {
+  position: fixed;
+  bottom: 0px;
+  width: 100%;
+  background-color: white;
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  font-size: 30rpx;
+  justify-content: space-between;
+}
+
+.sum {
+  font-size: 30rpx;
+  color: #ff4081;
+}
+
+.pay_fare {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 30rpx;
+}
+
+.fare {
+  font-size: 20rpx;
+}
+
+/*
+  border-radius把圆角的按钮变成直角的
+*/
+.pay_btn {
+  border-radius: 0px;
+  font-size: 12px;
+  height: 40px;
+  width: 100px;
+  padding: 5px;
+}

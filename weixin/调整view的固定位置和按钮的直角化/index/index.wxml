@@ -1,0 +1,29 @@
+<!--index.wxml-->
+
+<view class='pay_box fixed'>
+  <view class='pay_box' style='padding: 10rpx 10rpx'>
+    <view class='pay_box' style='font-size: 34rpx'>
+      <view>
+        <icon type="success" size="23"></icon>
+      </view>
+      <view style='padding: 8px;'>全选</view>
+    </view>
+
+    <view style='padding-left:10px'>
+      <view class='detail'>
+        <view class='pay_box' style='font-size: 30rpx'>
+          <view class='sum'>合计</view>
+          <view class='sum'>100</view>
+        </view>
+        <view class='pay_fare'>
+          <view class='fare'>运费</view>
+          <view class='fare'>￥10</view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view>
+    <button class="pay_btn" type="primary">去结算</button>
+  </view>
+</view>
